@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "77410448481",
+    "project_id": "manorent-4ae5b",
+    "storage_bucket": "manorent-4ae5b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:77410448481:android:2c836114209c3af5c4a620",
+        "android_client_info": {
+          "package_name": "com.example.manorent"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC36GJdrCz52ziNzz8bWglQwEWmTKQ_xJI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

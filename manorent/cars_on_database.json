@@ -1,0 +1,351 @@
+[
+  {
+    "id": 1,
+    "marca": "Kia",
+    "modello": "Sportage 4 Serie",
+    "cilindrata": 1.6,
+    "img": "https://lshlxjqqkjhspkfeayzm.supabase.co/storage/v1/object/sign/manorent-images/kia_sportage.jfif?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2RjODFmZjk5LTFjOWUtNDBiOS1iYTk3LTE1MjA1NzllZDQyYSJ9.eyJ1cmwiOiJtYW5vcmVudC1pbWFnZXMva2lhX3Nwb3J0YWdlLmpmaWYiLCJpYXQiOjE3NDY2NDk1ODksImV4cCI6MjY5MjcyOTU4OX0.s1sgfzqr1FKuvzCxdSQQOUWaoJ-Gdm89yLz-Oyyz1C4",
+    "km": 8000,
+    "cavalli": 136,
+    "kilowat": 100,
+    "cambio": "manuale",
+    "alimentazione": "Diesel Mild Hybrid",
+    "descrizione": "La Kia Sportage 4 Serie 1.6 CRDI è un SUV disponibile con formule di noleggio a lungo termine tramite Manorent. Si distingue per il suo design moderno con linee dinamiche e interni spaziosi e ben rifiniti. A livello di prestazioni, il motore 1.6 CRDI offre un buon equilibrio tra potenza e consumo di carburante. È un veicolo versatile, adatto sia per la città che per percorsi fuoristrada, con opzione di trazione integrale su alcuni modelli. Sul piano tecnologico, è dotata di sistemi avanzati di assistenza alla guida e navigazione, mentre per quanto riguarda la sicurezza, è equipaggiata con tecnologie attive e passive, incluso il controllo della stabilità. Il noleggio a lungo termine tramite Manorent viene presentato come vantaggioso, anche se nella descrizione originale non sono specificati i dettagli completi dei benefici offerti.",
+    "prezzi": {
+      "24_mesi": 499,
+      "36_mesi": 459,
+      "48_mesi": 429
+    },
+    "servizi_inclusi": [
+      "Manutenzione ordinaria",
+      "Manutenzione straordinaria",
+      "Assicurazione RCA",
+      "Limitazione danni al veicolo",
+      "Furto e incendio",
+      "Copertura eventi naturali",
+      "Soccorso stradale",
+      "Bollo auto mensile",
+      "Servizio di rinotifica multe"
+    ]
+  },
+  {
+    "id": 3,
+    "marca": "Mercedes",
+    "modello":"Sprinter",
+    "cilindrata": 2.5,
+    "img": "https://lshlxjqqkjhspkfeayzm.supabase.co/storage/v1/object/sign/manorent-images/commerciali/mercedes_vito_commercial.jfif?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2RjODFmZjk5LTFjOWUtNDBiOS1iYTk3LTE1MjA1NzllZDQyYSJ9.eyJ1cmwiOiJtYW5vcmVudC1pbWFnZXMvY29tbWVyY2lhbGkvbWVyY2VkZXNfdml0b19jb21tZXJjaWFsLmpmaWYiLCJpYXQiOjE3NDcyMTg5ODUsImV4cCI6MjY5MzI5ODk4NX0.MOGWWnmDMiNex-vL0i81Uu_B5EHTCsVV8xcEqBhI6qU",
+    "km": 0,
+    "cavalli": 190,
+    "kilowat": 140,
+    "cambio": "automatica",
+    "alimentazione":"Diesel",
+    "descrizione":"Il Mercedes-Benz Sprinter è da anni parte integrante del settore dei veicoli commerciali. Convince soprattutto nel settore commerciale, ma entusiasma anche artigiani e imprese di trasporti per la sua versatilità ed efficienza.",
+    "prezzi": {
+      "24_mesi":630,
+      "36_mesi":680,
+      "48_mesi":720
+    },
+    "servizi_inclusi": [
+      "Manutenzione ordinaria",
+      "Manutenzione straordinaria",
+      "Assicurazione RCA",
+      "Limitazione danni al veicolo",
+      "Furto e incendio",
+      "Copertura eventi naturali",
+      "Soccorso stradale",
+      "Bollo auto mensile",
+      "Servizio di rinotifica multe"
+    ]
+
+  },
+  {
+    "id": 2,
+    "marca": "Volkswagen",
+    "modello": "Golf 8",
+    "cilindrata": 1.5,
+    "img": "https://lshlxjqqkjhspkfeayzm.supabase.co/storage/v1/object/sign/manorent-images/golf8.jfif?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2RjODFmZjk5LTFjOWUtNDBiOS1iYTk3LTE1MjA1NzllZDQyYSJ9.eyJ1cmwiOiJtYW5vcmVudC1pbWFnZXMvZ29sZjguamZpZiIsImlhdCI6MTc0NjY1MjMwNCwiZXhwIjoxNzQ5MjQ0MzA0fQ.dl1hkfQGGDntJgI8t-YTXtJSclTfSqL-Bd0FDFcyO48",
+    "km": 12000,
+    "cavalli": 130,
+    "kilowat": 96,
+    "cambio": "automatico",
+    "alimentazione": "Benzina",
+    "descrizione": "La Volkswagen Golf 8 unisce tecnologia avanzata e comfort di guida, con motore 1.5 TSI da 130 CV. È ideale per chi cerca una compatta elegante e performante.",
+    "prezzi": {
+      "24_mesi": 479,
+      "36_mesi": 449,
+      "48_mesi": 419
+    },
+    "servizi_inclusi": [
+      "Manutenzione ordinaria",
+      "Manutenzione straordinaria",
+      "Assicurazione RCA",
+      "Limitazione danni al veicolo",
+      "Furto e incendio",
+      "Copertura eventi naturali",
+      "Soccorso stradale",
+      "Bollo auto mensile",
+      "Servizio di rinotifica multe"
+    ]
+  },
+  {
+    "id": 3,
+    "marca": "Toyota",
+    "modello": "Yaris Cross",
+    "cilindrata": 1.5,
+    "img": "https://lshlxjqqkjhspkfeayzm.supabase.co/storage/v1/object/sign/manorent-images/toyota_yaris_cross.jfif?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2RjODFmZjk5LTFjOWUtNDBiOS1iYTk3LTE1MjA1NzllZDQyYSJ9.eyJ1cmwiOiJtYW5vcmVudC1pbWFnZXMvdG95b3RhX3lhcmlzX2Nyb3NzLmpmaWYiLCJpYXQiOjE3NDY2NTIzNTksImV4cCI6MjY5MjczMjM1OX0.tjbbxn0EoBTTEsU3Zfx6d3Swp0-TG5kespcIPr_0thc",
+    "km": 5000,
+    "cavalli": 116,
+    "kilowat": 85,
+    "cambio": "automatico",
+    "alimentazione": "Hybrid",
+    "descrizione": "Il Toyota Yaris Cross 1.5 Hybrid è un crossover urbano con ottima efficienza nei consumi e sistema ibrido autoregenerativo, perfetto per la guida cittadina.",
+    "prezzi": {
+      "24_mesi": 469,
+      "36_mesi": 439,
+      "48_mesi": 409
+    },
+    "servizi_inclusi": [
+      "Manutenzione ordinaria",
+      "Manutenzione straordinaria",
+      "Assicurazione RCA",
+      "Limitazione danni al veicolo",
+      "Furto e incendio",
+      "Copertura eventi naturali",
+      "Soccorso stradale",
+      "Bollo auto mensile",
+      "Servizio di rinotifica multe"
+    ]
+  },
+  {
+    "id": 4,
+    "marca": "BMW",
+    "modello": "Serie 3 Touring",
+    "cilindrata": 2.0,
+    "img": "https://lshlxjqqkjhspkfeayzm.supabase.co/storage/v1/object/sign/manorent-images/bmw_serie3_touring.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2RjODFmZjk5LTFjOWUtNDBiOS1iYTk3LTE1MjA1NzllZDQyYSJ9.eyJ1cmwiOiJtYW5vcmVudC1pbWFnZXMvYm13X3NlcmllM190b3VyaW5nLmpwZyIsImlhdCI6MTc0NjY1MjM4MiwiZXhwIjoxNzQ5MjQ0MzgyfQ.zb7y8ZwUE-kAJoOq6gCu3Uwuik51c2iwUR3os3G6lRw",
+    "km": 15000,
+    "cavalli": 190,
+    "kilowat": 140,
+    "cambio": "automatico",
+    "alimentazione": "Diesel",
+    "descrizione": "La BMW Serie 3 Touring offre spazio e prestazioni elevate, con un motore 2.0 diesel efficiente e potente. Perfetta per i lunghi viaggi.",
+    "prezzi": {
+      "24_mesi": 649,
+      "36_mesi": 619,
+      "48_mesi": 589
+    },
+    "servizi_inclusi": [
+      "Manutenzione ordinaria",
+      "Manutenzione straordinaria",
+      "Assicurazione RCA",
+      "Limitazione danni al veicolo",
+      "Furto e incendio",
+      "Copertura eventi naturali",
+      "Soccorso stradale",
+      "Bollo auto mensile",
+      "Servizio di rinotifica multe"
+    ]
+  },
+  {
+    "id": 5,
+    "marca": "Peugeot",
+    "modello": "208",
+    "cilindrata": 1.2,
+    "img": "https://lshlxjqqkjhspkfeayzm.supabase.co/storage/v1/object/sign/manorent-images/peugeot_208.jfif?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2RjODFmZjk5LTFjOWUtNDBiOS1iYTk3LTE1MjA1NzllZDQyYSJ9.eyJ1cmwiOiJtYW5vcmVudC1pbWFnZXMvcGV1Z2VvdF8yMDguamZpZiIsImlhdCI6MTc0NjY1MjQwMywiZXhwIjoyNjkyNzMyNDAzfQ.T6tv4TnhsLqv1dVKLFhknWxcbMVf2NxFAEfZ_WAE3ow",
+    "km": 7000,
+    "cavalli": 100,
+    "kilowat": 74,
+    "cambio": "manuale",
+    "alimentazione": "Benzina",
+    "descrizione": "La Peugeot 208 1.2 PureTech è una compatta agile e moderna, ideale per la città grazie al suo motore brillante e ai consumi ridotti.",
+    "prezzi": {
+      "24_mesi": 429,
+      "36_mesi": 399,
+      "48_mesi": 379
+    },
+    "servizi_inclusi": [
+      "Manutenzione ordinaria",
+      "Manutenzione straordinaria",
+      "Assicurazione RCA",
+      "Limitazione danni al veicolo",
+      "Furto e incendio",
+      "Copertura eventi naturali",
+      "Soccorso stradale",
+      "Bollo auto mensile",
+      "Servizio di rinotifica multe"
+    ]
+  },
+  {
+    "id": 6,
+    "marca": "Fiat",
+    "modello": "500X",
+    "cilindrata": 1.3,
+    "img": "https://lshlxjqqkjhspkfeayzm.supabase.co/storage/v1/object/sign/manorent-images/fiat_500x.jfif?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2RjODFmZjk5LTFjOWUtNDBiOS1iYTk3LTE1MjA1NzllZDQyYSJ9.eyJ1cmwiOiJtYW5vcmVudC1pbWFnZXMvZmlhdF81MDB4LmpmaWYiLCJpYXQiOjE3NDY2NTI0MjcsImV4cCI6MjY5MjczMjQyN30.dp5HlYZh_eAJfnc3D8gDHG2vjMW-HmJ_0yXLG02PnY0",
+    "km": 9000,
+    "cavalli": 150,
+    "kilowat": 110,
+    "cambio": "automatico",
+    "alimentazione": "Benzina",
+    "descrizione": "Fiat 500X 1.3 Turbo combina lo stile iconico della 500 con praticità e tecnologia, rendendola un crossover perfetto per ogni esigenza.",
+    "prezzi": {
+      "24_mesi": 479,
+      "36_mesi": 449,
+      "48_mesi": 429
+    },
+    "servizi_inclusi": [
+      "Manutenzione ordinaria",
+      "Manutenzione straordinaria",
+      "Assicurazione RCA",
+      "Limitazione danni al veicolo",
+      "Furto e incendio",
+      "Copertura eventi naturali",
+      "Soccorso stradale",
+      "Bollo auto mensile",
+      "Servizio di rinotifica multe"
+    ]
+  },
+  {
+    "id": 7,
+    "marca": "Hyundai",
+    "modello": "Tucson",
+    "cilindrata": 1.6,
+    "img": "https://lshlxjqqkjhspkfeayzm.supabase.co/storage/v1/object/sign/manorent-images/hyundai_tucson.jfif?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2RjODFmZjk5LTFjOWUtNDBiOS1iYTk3LTE1MjA1NzllZDQyYSJ9.eyJ1cmwiOiJtYW5vcmVudC1pbWFnZXMvaHl1bmRhaV90dWNzb24uamZpZiIsImlhdCI6MTc0NjY1MjQ0OCwiZXhwIjoyNjkyNzMyNDQ4fQ.dU6QSADyi4joltzQJVhElBvHF87hUjaimOSfVXf7uV4",
+    "km": 6000,
+    "cavalli": 150,
+    "kilowat": 110,
+    "cambio": "automatico",
+    "alimentazione": "Hybrid",
+    "descrizione": "Hyundai Tucson Hybrid 1.6 è un SUV spazioso, dotato di tecnologia avanzata e consumi ottimizzati grazie al sistema ibrido.",
+    "prezzi": {
+      "24_mesi": 499,
+      "36_mesi": 469,
+      "48_mesi": 439
+    },
+    "servizi_inclusi": [
+      "Manutenzione ordinaria",
+      "Manutenzione straordinaria",
+      "Assicurazione RCA",
+      "Limitazione danni al veicolo",
+      "Furto e incendio",
+      "Copertura eventi naturali",
+      "Soccorso stradale",
+      "Bollo auto mensile",
+      "Servizio di rinotifica multe"
+    ]
+  },
+  {
+    "id": 8,
+    "marca": "Audi",
+    "modello": "A3 Sportback",
+    "cilindrata": 2.0,
+    "img": "https://lshlxjqqkjhspkfeayzm.supabase.co/storage/v1/object/sign/manorent-images/audi_A3_sportback.jfif?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2RjODFmZjk5LTFjOWUtNDBiOS1iYTk3LTE1MjA1NzllZDQyYSJ9.eyJ1cmwiOiJtYW5vcmVudC1pbWFnZXMvYXVkaV9BM19zcG9ydGJhY2suamZpZiIsImlhdCI6MTc0NjY1MjQ2NiwiZXhwIjoyNjkyNzMyNDY2fQ.IGnf_L1p28wyjpKjgKqPLxf-WDb5gYx_Z_M6owiMF4M",
+    "km": 13000,
+    "cavalli": 150,
+    "kilowat": 110,
+    "cambio": "automatico",
+    "alimentazione": "Diesel",
+    "descrizione": "Audi A3 Sportback 2.0 TDI è una berlina compatta premium, dalle ottime prestazioni e comfort elevato, ideale per chi cerca eleganza e dinamicità.",
+    "prezzi": {
+      "24_mesi": 599,
+      "36_mesi": 569,
+      "48_mesi": 539
+    },
+    "servizi_inclusi": [
+      "Manutenzione ordinaria",
+      "Manutenzione straordinaria",
+      "Assicurazione RCA",
+      "Limitazione danni al veicolo",
+      "Furto e incendio",
+      "Copertura eventi naturali",
+      "Soccorso stradale",
+      "Bollo auto mensile",
+      "Servizio di rinotifica multe"
+    ]
+  },
+  {
+    "id": 9,
+    "marca": "Renault",
+    "modello": "Captur",
+    "cilindrata": 1.0,
+    "img": "https://lshlxjqqkjhspkfeayzm.supabase.co/storage/v1/object/sign/manorent-images/renault_captur.jfif?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2RjODFmZjk5LTFjOWUtNDBiOS1iYTk3LTE1MjA1NzllZDQyYSJ9.eyJ1cmwiOiJtYW5vcmVudC1pbWFnZXMvcmVuYXVsdF9jYXB0dXIuamZpZiIsImlhdCI6MTc0NjY1MjQ5MCwiZXhwIjoyNjkyNzMyNDkwfQ.-qnFcwig_Gd7wEdiZWc-P0D8es7eV9qdX9wAyFOyFHg",
+    "km": 4000,
+    "cavalli": 90,
+    "kilowat": 66,
+    "cambio": "manuale",
+    "alimentazione": "GPL",
+    "descrizione": "Renault Captur è un crossover compatto e versatile. Con alimentazione GPL, offre un ottimo compromesso tra costi di gestione e mobilità sostenibile.",
+    "prezzi": {
+      "24_mesi": 449,
+      "36_mesi": 419,
+      "48_mesi": 399
+    },
+    "servizi_inclusi": [
+      "Manutenzione ordinaria",
+      "Manutenzione straordinaria",
+      "Assicurazione RCA",
+      "Limitazione danni al veicolo",
+      "Furto e incendio",
+      "Copertura eventi naturali",
+      "Soccorso stradale",
+      "Bollo auto mensile",
+      "Servizio di rinotifica multe"
+    ]
+  },
+  {
+    "id": 10,
+    "marca": "Nissan",
+    "modello": "Qashqai",
+    "cilindrata": 1.3,
+    "img": "https://lshlxjqqkjhspkfeayzm.supabase.co/storage/v1/object/sign/manorent-images/nissan_qashqai.jfif?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2RjODFmZjk5LTFjOWUtNDBiOS1iYTk3LTE1MjA1NzllZDQyYSJ9.eyJ1cmwiOiJtYW5vcmVudC1pbWFnZXMvbmlzc2FuX3Fhc2hxYWkuamZpZiIsImlhdCI6MTc0NjY1MjUxMywiZXhwIjoyNjkyNzMyNTEzfQ.36oUGkbb-x8D4M5-biHvZ1BptgAyIlTEbusigizKPZQ",
+    "km": 11000,
+    "cavalli": 140,
+    "kilowat": 103,
+    "cambio": "automatico",
+    "alimentazione": "Mild Hybrid",
+    "descrizione": "Nissan Qashqai 1.3 Mild Hybrid è un SUV tecnologico e affidabile, ideale per la famiglia e i lunghi viaggi grazie al comfort e alla guida fluida.",
+    "prezzi": {
+      "24_mesi": 509,
+      "36_mesi": 479,
+      "48_mesi": 449
+    },
+    "servizi_inclusi": [
+      "Manutenzione ordinaria",
+      "Manutenzione straordinaria",
+      "Assicurazione RCA",
+      "Limitazione danni al veicolo",
+      "Furto e incendio",
+      "Copertura eventi naturali",
+      "Soccorso stradale",
+      "Bollo auto mensile",
+      "Servizio di rinotifica multe"
+    ]
+  },
+  {
+    "id": 11,
+    "marca": "Mercedes",
+    "modello": "GLA 200",
+    "cilindrata": 1.3,
+    "img": "https://lshlxjqqkjhspkfeayzm.supabase.co/storage/v1/object/sign/manorent-images/mercedes_GLA_200.jfif?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2RjODFmZjk5LTFjOWUtNDBiOS1iYTk3LTE1MjA1NzllZDQyYSJ9.eyJ1cmwiOiJtYW5vcmVudC1pbWFnZXMvbWVyY2VkZXNfR0xBXzIwMC5qZmlmIiwiaWF0IjoxNzQ2NjUyNTM0LCJleHAiOjI2OTI3MzI1MzR9.aaT227slufseCs65UFUUSIceILD_Rz6AD-9AFPXsl1k",
+    "km": 10000,
+    "cavalli": 163,
+    "kilowat": 120,
+    "cambio": "automatico",
+    "alimentazione": "Benzina",
+    "descrizione": "Mercedes GLA 200 con motore 1.3 turbo è un SUV compatto di lusso che coniuga prestazioni brillanti e comfort premium in ogni situazione.",
+    "prezzi": {
+      "24_mesi": 639,
+      "36_mesi": 609,
+      "48_mesi": 579
+    },
+    "servizi_inclusi": [
+      "Manutenzione ordinaria",
+      "Manutenzione straordinaria",
+      "Assicurazione RCA",
+      "Limitazione danni al veicolo",
+      "Furto e incendio",
+      "Copertura eventi naturali",
+      "Soccorso stradale",
+      "Bollo auto mensile",
+      "Servizio di rinotifica multe"
+    ]
+  }
+]
