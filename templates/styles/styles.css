@@ -69,7 +69,7 @@ body {
     width: 456px;
     height: 5px;
     background-color: #F8A800;
-    margin: 16px 0;
+    margin: 10px 0;
 }
 
 .hero-subtitle {
@@ -290,7 +290,7 @@ body {
 /* Benefits Section Styles */
 .benefits-section {
     width: 100%;
-    padding: 60px 20px;
+    padding: 20px;
     background-color: #fff;
 }
 
@@ -314,7 +314,7 @@ body {
     width: 89px;
     height: 5px;
     background-color: #F8A800;
-    margin-bottom: 15px;
+    margin-bottom: 2px;
 }
 
 .benefits-title {
