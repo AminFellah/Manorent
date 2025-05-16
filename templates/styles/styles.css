@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 html {
@@ -297,11 +299,14 @@ body {
 .benefits-container {
     max-width: 1700px;
     margin: 0 auto;
-    padding: 20px;
+    margin-right: auto;
+    margin-left: 1%;
+    padding: 10px;
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-between;
-    
+    justify-content: center;
+    align-items: center;
 }
 
 .benefits-text {
@@ -334,10 +339,10 @@ body {
 }
 
 .benefits-cards {
-    display: flex;
+    display: block;
     flex-direction: column;
     gap: 30px;
-    width: 100%;
+    width: 50%;
     max-width: 660px;
 }
 
@@ -349,6 +354,7 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    width: 350px; /* Fixed width for each card */
 }
 
 .benefit-icon {
@@ -417,6 +423,24 @@ body {
     
     .benefit-description {
         font-size: 16px;
+    }
+}
+
+@media (min-width: 1824px) {
+    .benefits-container {
+        max-width: 1600px;
+        margin-left: auto;
+        margin-right: auto;
+        justify-content: center;
+        gap: 20px;
+    }
+    
+    .benefits-text {
+        max-width: 800px;
+    }
+    
+    .benefits-cards {
+        max-width: 600px;
     }
 }
 
@@ -599,7 +623,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: 5px;
 }
 
 .logo-container {
@@ -625,7 +649,7 @@ body {
     display: flex;
     gap: 30px;
     justify-content: center;
-    margin-top: 15px;
+    margin-top: 5px;
 }
 
 .social-icon {
