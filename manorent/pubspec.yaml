@@ -40,6 +40,7 @@ dependencies:
   flutter_gemini: ^3.0.0
   dash_chat_2: ^0.0.21
   flutter_launcher_icons: ^0.14.3
+  flutter_sticky_widgets: ^0.0.3
 
 flutter_launcher_icons:
   android: "launcher_icon"

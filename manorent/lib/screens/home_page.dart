@@ -4,6 +4,7 @@ import '../models/car_model.dart';
 import '../services/car_service.dart';
 import '../services/firebase_service.dart';
 import 'login_page.dart';
+import 'car_detail_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -129,12 +130,9 @@ class _HomePageState extends State<HomePage> {
   
   // Mostra i dettagli dell'auto
   void _showCarDetails(int carId) {
-    final car = _cars.firstWhere((car) => car.id == carId);
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Dettagli di ${car.nome}'),
-        duration: const Duration(seconds: 2),
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CarDetailPage(carId: carId),
       ),
     );
   }
