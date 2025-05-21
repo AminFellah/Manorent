@@ -31,19 +31,19 @@
   {
     "id": 3,
     "marca": "Mercedes",
-    "modello":"Sprinter",
+    "modello": "Sprinter",
     "cilindrata": 2.5,
     "img": "https://lshlxjqqkjhspkfeayzm.supabase.co/storage/v1/object/sign/manorent-images/commerciali/mercedes_vito_commercial.jfif?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2RjODFmZjk5LTFjOWUtNDBiOS1iYTk3LTE1MjA1NzllZDQyYSJ9.eyJ1cmwiOiJtYW5vcmVudC1pbWFnZXMvY29tbWVyY2lhbGkvbWVyY2VkZXNfdml0b19jb21tZXJjaWFsLmpmaWYiLCJpYXQiOjE3NDcyMTg5ODUsImV4cCI6MjY5MzI5ODk4NX0.MOGWWnmDMiNex-vL0i81Uu_B5EHTCsVV8xcEqBhI6qU",
     "km": 0,
     "cavalli": 190,
     "kilowat": 140,
     "cambio": "automatica",
-    "alimentazione":"Diesel",
-    "descrizione":"Il Mercedes-Benz Sprinter è da anni parte integrante del settore dei veicoli commerciali. Convince soprattutto nel settore commerciale, ma entusiasma anche artigiani e imprese di trasporti per la sua versatilità ed efficienza.",
+    "alimentazione": "Diesel",
+    "descrizione": "Il Mercedes-Benz Sprinter è da anni parte integrante del settore dei veicoli commerciali. Convince soprattutto nel settore commerciale, ma entusiasma anche artigiani e imprese di trasporti per la sua versatilità ed efficienza.",
     "prezzi": {
-      "24_mesi":630,
-      "36_mesi":680,
-      "48_mesi":720
+      "24_mesi": 630,
+      "36_mesi": 680,
+      "48_mesi": 720
     },
     "servizi_inclusi": [
       "Manutenzione ordinaria",
@@ -56,7 +56,6 @@
       "Bollo auto mensile",
       "Servizio di rinotifica multe"
     ]
-
   },
   {
     "id": 2,

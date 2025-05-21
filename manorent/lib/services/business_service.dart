@@ -2,15 +2,15 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/car_model.dart';
 
-class CommercialService {
+class BusinessService {
   // URL del server Flask
-  final String baseUrl = 'http://192.168.0.25:5000/autocarri';
+  final String baseUrl = 'http://192.168.0.25:5000/business';
   
   // Lista dei preferiti (gestita localmente)
   final Set<int> _favorites = {};
   
   // Ottiene tutti i veicoli commerciali dal server
-  Future<List<Car>> getCommercialVehicles() async {
+  Future<List<Car>> getBusinessVehicles() async {
     try {
       final response = await http.get(Uri.parse(baseUrl));
       
@@ -23,7 +23,7 @@ class CommercialService {
         
         return vehicles;
       } else {
-        throw Exception('Errore nel caricamento dei veicoli commerciali: ${response.statusCode}');
+        throw Exception('Errore nel caricamento dei veicoli aziendali: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Errore nella richiesta: $e');
@@ -31,7 +31,7 @@ class CommercialService {
   }
 
   // Ottiene i dettagli di un singolo veicolo commerciale
-  Future<Car> getCommercialVehicleDetails(int vehicleId) async {
+  Future<Car> getBusinessVehicleDetails(int vehicleId) async {
     try {
       final response = await http.get(Uri.parse('$baseUrl/$vehicleId'));
       
@@ -44,7 +44,7 @@ class CommercialService {
         
         return vehicle;
       } else {
-        throw Exception('Veicolo commerciale non trovato');
+        throw Exception('Veicolo aziendale non trovato');
       }
     } catch (e) {
       throw Exception('Errore nella richiesta: $e');
@@ -68,16 +68,16 @@ class CommercialService {
   }
   
   // Ottiene solo i veicoli commerciali preferiti
-  Future<List<Car>> getFavoriteCommercialVehicles() async {
+  Future<List<Car>> getFavoriteBusinessVehicles() async {
     if (_favorites.isEmpty) {
       return [];
     }
     
     try {
-      List<Car> allVehicles = await getCommercialVehicles();
+      List<Car> allVehicles = await getBusinessVehicles();
       return allVehicles.where((vehicle) => _favorites.contains(vehicle.id)).toList();
     } catch (e) {
-      throw Exception('Errore nel caricamento dei veicoli commerciali preferiti: $e');
+      throw Exception('Errore nel caricamento dei veicoli aziendali preferiti: $e');
     }
   }
   

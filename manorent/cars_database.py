@@ -16,7 +16,38 @@ db = firestore.client()
 
 # Collezione Firestore
 CARS_COLLECTION = "auto"
-COMMERCIAL_COLLECTION="commerciali"
+COMMERCIAL_COLLECTION = "autocarri"
+BUSINESS_COLLECTION = "business"
+
+class BusinessResource(Resource):
+    def get(self, car_id=None):
+        """Recupera i dati di una singola auto o di tutte le auto."""
+        if car_id:
+            doc = db.collection(BUSINESS_COLLECTION).document(car_id).get()
+            if doc.exists:
+                return jsonify(doc.to_dict())
+            return {"message": "Car not found"}, 404
+        
+        cars = [doc.to_dict() for doc in db.collection(BUSINESS_COLLECTION).stream()]
+        return jsonify(cars)
+
+    def post(self):
+        """Aggiunge una nuova auto al database."""
+        data = request.get_json()
+        car_id = str(data.get("id"))  # Converte l'ID in stringa per Firestore
+        if not car_id:
+            return {"error": "ID is required"}, 400
+        db.collection(BUSINESS_COLLECTION).document(car_id).set(data)
+        return {"message": f"Business Car {car_id} added successfully"}, 201
+
+    def delete(self, car_id):
+        """Elimina un'auto dal database."""
+        db.collection(BUSINESS_COLLECTION).document(car_id).delete()
+        return {"message": f"Business car {car_id} deleted successfully"}, 200
+
+# Route
+api.add_resource(BusinessResource, "/business", "/business/<string:car_id>")
+
 
 class CarResource(Resource):
     def get(self, car_id=None):
@@ -74,7 +105,7 @@ class CommercialResource(Resource):
         return {"message": f"Commercial car {car_id} deleted successfully"}, 200
 
 # Route
-api.add_resource(CommercialResource, "/commerciali", "/commerciali/<string:car_id>")
+api.add_resource(CommercialResource, "/autocarri", "/autocarri/<string:car_id>")
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
