@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../components/car_card.dart';
 import '../models/car_model.dart';
 import '../services/car_service.dart';
+import '../services/commercial_service.dart';
 import '../services/firebase_service.dart';
 import 'login_page.dart';
 import 'car_detail_page.dart';
@@ -16,55 +17,59 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final CarService _carService = CarService();
+  final CommercialService _commercialService = CommercialService();
   final FirebaseService _firebaseService = FirebaseService();
   
-  // Lista delle auto caricate dal server
-  List<Car> _cars = [];
+  // Lista dei veicoli caricati dal server
+  List<Car> _vehicles = [];
   bool _isLoading = true;
   String _errorMessage = '';
+  bool _isCommercial = false; // Toggle per veicoli commerciali
   
   // Variabili per la ricerca e i filtri
   String _searchQuery = '';
   bool _onlyAutomaticTransmission = false;
   String _selectedFuelType = '';
   double _maxPrice = 0;
-  double _selectedMaxPrice = 0; // Valore selezionato per il prezzo massimo
+  double _selectedMaxPrice = 0;
   List<String> _availableFuelTypes = [];
   int _minSeats = 0;
-  bool _showPriceFilter = false; // Per mostrare/nascondere il filtro prezzo
+  bool _showPriceFilter = false;
   
   @override
   void initState() {
     super.initState();
-    _loadCars();
+    _loadVehicles();
   }
   
-  // Carica le auto dal server
-  Future<void> _loadCars() async {
+  // Carica i veicoli dal server
+  Future<void> _loadVehicles() async {
     setState(() {
       _isLoading = true;
       _errorMessage = '';
     });
     
     try {
-      final cars = await _carService.getCars();
+      final vehicles = _isCommercial 
+          ? await _commercialService.getCommercialVehicles()
+          : await _carService.getCars();
       
       // Determina il prezzo massimo e i tipi di carburante disponibili
       double maxPrice = 0;
       Set<String> fuelTypes = {};
       
-      for (var car in cars) {
-        if (car.prezzoMensile > maxPrice) {
-          maxPrice = car.prezzoMensile.toDouble();
+      for (var vehicle in vehicles) {
+        if (vehicle.prezzoMensile > maxPrice) {
+          maxPrice = vehicle.prezzoMensile.toDouble();
         }
-        fuelTypes.add(car.alimentazione);
+        fuelTypes.add(vehicle.alimentazione);
       }
       
       // Arrotonda il prezzo massimo al centinaio più vicino per lo slider
       maxPrice = (maxPrice / 100).ceil() * 100;
       
       setState(() {
-        _cars = cars;
+        _vehicles = vehicles;
         _isLoading = false;
         _maxPrice = maxPrice;
         if (_selectedMaxPrice == 0) {
@@ -74,32 +79,24 @@ class _HomePageState extends State<HomePage> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = 'Errore nel caricamento delle auto: $e';
+        _errorMessage = 'Errore nel caricamento dei veicoli: $e';
         _isLoading = false;
       });
     }
   }
   
-  // Filtra le auto in base ai criteri selezionati
-  List<Car> _getFilteredCars() {
-    return _cars.where((car) {
-      // Verifica se l'auto corrisponde alla query di ricerca
+  // Filtra i veicoli in base ai criteri selezionati
+  List<Car> _getFilteredVehicles() {
+    return _vehicles.where((vehicle) {
       bool matchesSearch = _searchQuery.isEmpty ||
-          car.nome.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          car.marca.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          car.modello.toLowerCase().contains(_searchQuery.toLowerCase());
+          vehicle.nome.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          vehicle.marca.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          vehicle.modello.toLowerCase().contains(_searchQuery.toLowerCase());
       
-      // Verifica se l'auto corrisponde al filtro per tipo di trasmissione
-      bool matchesTransmission = !_onlyAutomaticTransmission || car.isAutomatico;
-      
-      // Verifica se l'auto corrisponde al filtro per tipo di carburante
-      bool matchesFuelType = _selectedFuelType.isEmpty || car.alimentazione == _selectedFuelType;
-      
-      // Verifica se l'auto ha abbastanza posti
-      bool matchesSeats = _minSeats == 0 || car.posti >= _minSeats;
-      
-      // Verifica se l'auto rientra nel budget
-      bool matchesPrice = _selectedMaxPrice >= _maxPrice || car.prezzoMensile <= _selectedMaxPrice;
+      bool matchesTransmission = !_onlyAutomaticTransmission || vehicle.isAutomatico;
+      bool matchesFuelType = _selectedFuelType.isEmpty || vehicle.alimentazione == _selectedFuelType;
+      bool matchesSeats = _minSeats == 0 || vehicle.posti >= _minSeats;
+      bool matchesPrice = _selectedMaxPrice >= _maxPrice || vehicle.prezzoMensile <= _selectedMaxPrice;
       
       return matchesSearch && matchesTransmission && matchesFuelType && matchesSeats && matchesPrice;
     }).toList();
@@ -118,21 +115,28 @@ class _HomePageState extends State<HomePage> {
   }
   
   // Toggle preferito
-  void _toggleFavorite(int carId) {
-    _carService.toggleFavorite(carId);
+  void _toggleFavorite(int vehicleId) {
+    if (_isCommercial) {
+      _commercialService.toggleFavorite(vehicleId);
+    } else {
+      _carService.toggleFavorite(vehicleId);
+    }
     setState(() {
-      final carIndex = _cars.indexWhere((car) => car.id == carId);
-      if (carIndex != -1) {
-        _cars[carIndex].isFavorite = !_cars[carIndex].isFavorite;
+      final vehicleIndex = _vehicles.indexWhere((vehicle) => vehicle.id == vehicleId);
+      if (vehicleIndex != -1) {
+        _vehicles[vehicleIndex].isFavorite = !_vehicles[vehicleIndex].isFavorite;
       }
     });
   }
   
-  // Mostra i dettagli dell'auto
-  void _showCarDetails(int carId) {
+  // Mostra i dettagli del veicolo
+  void _showVehicleDetails(int vehicleId) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => CarDetailPage(carId: carId),
+        builder: (context) => CarDetailPage(
+          carId: vehicleId,
+          isCommercial: _isCommercial,
+        ),
       ),
     );
   }
@@ -170,7 +174,7 @@ class _HomePageState extends State<HomePage> {
           // Pulsante di refresh
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: _loadCars,
+            onPressed: _loadVehicles,
           ),
         ],
       ),
@@ -250,7 +254,7 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: verticalSpacing),
             ElevatedButton(
-              onPressed: _loadCars,
+              onPressed: _loadVehicles,
               child: const Text('Riprova'),
             ),
           ],
@@ -258,10 +262,10 @@ class _HomePageState extends State<HomePage> {
       );
     }
     
-    if (_cars.isEmpty) {
+    if (_vehicles.isEmpty) {
       return Center(
         child: Text(
-          'Nessuna auto disponibile',
+          'Nessun veicolo disponibile',
           style: TextStyle(
             fontSize: fontSize,
             color: const Color(0xFF2F3F63),
@@ -270,8 +274,8 @@ class _HomePageState extends State<HomePage> {
       );
     }
     
-    // Lista filtrata di auto
-    final filteredCars = _getFilteredCars();
+    // Lista filtrata di veicoli
+    final filteredVehicles = _getFilteredVehicles();
     
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -283,250 +287,112 @@ class _HomePageState extends State<HomePage> {
         children: [
           SizedBox(height: verticalSpacing),
           
-          // Barra di ricerca
-          TextField(
-            decoration: InputDecoration(
-              hintText: 'Cerca auto per marca o modello',
-              prefixIcon: const Icon(Icons.search, color: Color(0xFF2F3F63)),
-              suffixIcon: _searchQuery.isNotEmpty 
-                ? IconButton(
-                    icon: const Icon(Icons.clear, color: Color(0xFF2F3F63)),
-                    onPressed: () {
-                      setState(() {
-                        _searchQuery = '';
-                      });
-                    },
-                  )
-                : null,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: const BorderSide(color: Color(0xFFD9D9D9)),
+          // Toggle per tipo di veicolo
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  if (_isCommercial) {
+                    setState(() {
+                      _isCommercial = false;
+                      _loadVehicles();
+                    });
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: !_isCommercial ? const Color(0xFFF8A800) : Colors.grey[300],
+                  foregroundColor: !_isCommercial ? Colors.white : Colors.black,
+                ),
+                child: const Text('Privato'),
               ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: const BorderSide(color: Color(0xFFD9D9D9), width: 1.5),
+              SizedBox(width: horizontalPadding),
+              ElevatedButton(
+                onPressed: () {
+                  if (!_isCommercial) {
+                    setState(() {
+                      _isCommercial = true;
+                      _loadVehicles();
+                    });
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _isCommercial ? const Color(0xFFF8A800) : Colors.grey[300],
+                  foregroundColor: _isCommercial ? Colors.white : Colors.black,
+                ),
+                child: const Text('Business'),
               ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: const BorderSide(color: Color(0xFFF8A800), width: 1.5),
-              ),
-              filled: true,
-              fillColor: Colors.white,
-              contentPadding: const EdgeInsets.symmetric(vertical: 0),
-            ),
-            onChanged: (value) {
-              setState(() {
-                _searchQuery = value;
-              });
-            },
-            style: TextStyle(
-              fontSize: fontSize,
-              color: const Color(0xFF2F3F63),
-            ),
+            ],
           ),
           SizedBox(height: verticalSpacing),
           
-          // Filtri
+          // Barra di ricerca e filtro
           Row(
             children: [
-              Text(
-                'Filtri:',
-                style: TextStyle(
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF2F3F63),
-                ),
-              ),
-              SizedBox(width: horizontalPadding),
+              // Barra di ricerca
               Expanded(
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    // Adatta i filtri in base alla larghezza disponibile
-                    return SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          // Filtro trasmissione
-                          FilterChip(
-                            label: Text(
-                              'Automatica',
-                              style: TextStyle(fontSize: screenSize.width < 360 ? smallFontSize : fontSize),
-                            ),
-                            selected: _onlyAutomaticTransmission,
-                            selectedColor: const Color(0xFFF8A800),
-                            checkmarkColor: Colors.white,
-                            onSelected: (selected) {
-                              setState(() {
-                                _onlyAutomaticTransmission = selected;
-                              });
-                            },
-                          ),
-                          SizedBox(width: horizontalPadding * 0.5),
-                          
-                          // Dropdown per tipo di carburante
-                          DropdownButton<String>(
-                            hint: Text(
-                              'Alimentazione',
-                              style: TextStyle(fontSize: screenSize.width < 360 ? smallFontSize : fontSize),
-                            ),
-                            value: _selectedFuelType.isEmpty ? null : _selectedFuelType,
-                            items: [
-                              DropdownMenuItem<String>(
-                                value: '',
-                                child: Text(
-                                  'Tutti',
-                                  style: TextStyle(fontSize: screenSize.width < 360 ? smallFontSize : fontSize),
-                                ),
-                              ),
-                              ..._availableFuelTypes.map((type) => DropdownMenuItem<String>(
-                                value: type,
-                                child: Text(
-                                  type,
-                                  style: TextStyle(fontSize: screenSize.width < 360 ? smallFontSize : fontSize),
-                                ),
-                              )).toList(),
-                            ],
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedFuelType = value ?? '';
-                              });
-                            },
-                          ),
-                          SizedBox(width: horizontalPadding * 0.5),
-                          
-                          // Filtro posti
-                          DropdownButton<int>(
-                            hint: Text(
-                              'Min. posti',
-                              style: TextStyle(fontSize: screenSize.width < 360 ? smallFontSize : fontSize),
-                            ),
-                            value: _minSeats == 0 ? null : _minSeats,
-                            items: [
-                              DropdownMenuItem<int>(
-                                value: 0,
-                                child: Text(
-                                  'Tutti',
-                                  style: TextStyle(fontSize: screenSize.width < 360 ? smallFontSize : fontSize),
-                                ),
-                              ),
-                              DropdownMenuItem<int>(
-                                value: 2,
-                                child: Text(
-                                  '2+',
-                                  style: TextStyle(fontSize: screenSize.width < 360 ? smallFontSize : fontSize),
-                                ),
-                              ),
-                              DropdownMenuItem<int>(
-                                value: 4,
-                                child: Text(
-                                  '4+',
-                                  style: TextStyle(fontSize: screenSize.width < 360 ? smallFontSize : fontSize),
-                                ),
-                              ),
-                              DropdownMenuItem<int>(
-                                value: 5,
-                                child: Text(
-                                  '5+',
-                                  style: TextStyle(fontSize: screenSize.width < 360 ? smallFontSize : fontSize),
-                                ),
-                              ),
-                              DropdownMenuItem<int>(
-                                value: 7,
-                                child: Text(
-                                  '7+',
-                                  style: TextStyle(fontSize: screenSize.width < 360 ? smallFontSize : fontSize),
-                                ),
-                              ),
-                            ],
-                            onChanged: (value) {
-                              setState(() {
-                                _minSeats = value ?? 0;
-                              });
-                            },
-                          ),
-                          SizedBox(width: horizontalPadding * 0.5),
-                          
-                          // Pulsante di reset
-                          TextButton.icon(
-                            icon: const Icon(Icons.refresh, size: 18),
-                            label: Text(
-                              'Reset',
-                              style: TextStyle(fontSize: screenSize.width < 360 ? smallFontSize : fontSize),
-                            ),
-                            onPressed: _resetFilters,
-                            style: TextButton.styleFrom(
-                              foregroundColor: const Color(0xFF2F3F63),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Cerca veicolo per marca o modello',
+                    prefixIcon: const Icon(Icons.search, color: Color(0xFF2F3F63)),
+                    suffixIcon: _searchQuery.isNotEmpty 
+                      ? IconButton(
+                          icon: const Icon(Icons.clear, color: Color(0xFF2F3F63)),
+                          onPressed: () {
+                            setState(() {
+                              _searchQuery = '';
+                            });
+                          },
+                        )
+                      : null,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(color: Color(0xFFD9D9D9)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(color: Color(0xFFD9D9D9), width: 1.5),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(color: Color(0xFFF8A800), width: 1.5),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value;
+                    });
+                  },
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    color: const Color(0xFF2F3F63),
+                  ),
                 ),
               ),
-            ],
-          ),
-          SizedBox(height: verticalSpacingSmall),
-          
-          // Filtro prezzo
-          Row(
-            children: [
-              TextButton.icon(
-                icon: Icon(
-                  _showPriceFilter ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                  size: fontSize,
-                ),
-                label: Text(
-                  'Prezzo max: €${_selectedMaxPrice.toInt()}',
-                  style: TextStyle(fontSize: fontSize),
-                ),
+              SizedBox(width: horizontalPadding * 0.5),
+              // Bottone filtri
+              ElevatedButton.icon(
                 onPressed: () {
-                  setState(() {
-                    _showPriceFilter = !_showPriceFilter;
-                  });
+                  _showFilterModal(context, screenSize);
                 },
-                style: TextButton.styleFrom(
-                  foregroundColor: const Color(0xFF2F3F63),
+                icon: const Icon(Icons.filter_list),
+                label: const Text('Filtri'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF2F3F63),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
               ),
             ],
           ),
-          
-          // Slider per il prezzo
-          if (_showPriceFilter) ...[
-            Slider(
-              value: _selectedMaxPrice,
-              min: 0,
-              max: _maxPrice > 0 ? _maxPrice : 1000,
-              divisions: 10,
-              activeColor: const Color(0xFFF8A800),
-              inactiveColor: const Color(0xFFD9D9D9),
-              label: '€${_selectedMaxPrice.toInt()}',
-              onChanged: (value) {
-                setState(() {
-                  _selectedMaxPrice = value;
-                });
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '€0', 
-                  style: TextStyle(fontSize: smallFontSize, color: const Color(0xFF2F3F63))
-                ),
-                Text(
-                  '€${_maxPrice.toInt()}', 
-                  style: TextStyle(fontSize: smallFontSize, color: const Color(0xFF2F3F63))
-                ),
-              ],
-            ),
-            SizedBox(height: verticalSpacingSmall),
-          ],
+          SizedBox(height: verticalSpacing),
           
           // Numero di risultati
           Text(
-            '${filteredCars.length} risultati trovati',
+            '${filteredVehicles.length} risultati trovati',
             style: TextStyle(
               fontSize: smallFontSize,
               fontStyle: FontStyle.italic,
@@ -535,11 +401,11 @@ class _HomePageState extends State<HomePage> {
           ),
           SizedBox(height: verticalSpacingSmall),
           
-          // Lista delle auto
+          // Lista dei veicoli
           Expanded(
             child: RefreshIndicator(
-              onRefresh: _loadCars,
-              child: filteredCars.isEmpty
+              onRefresh: _loadVehicles,
+              child: filteredVehicles.isEmpty
                 ? Center(
                     child: Text(
                       'Nessun risultato per i filtri selezionati',
@@ -550,26 +416,255 @@ class _HomePageState extends State<HomePage> {
                     ),
                   )
                 : ListView.separated(
-                    itemCount: filteredCars.length,
+                    itemCount: filteredVehicles.length,
                     separatorBuilder: (context, index) => SizedBox(height: verticalSpacing),
                     itemBuilder: (context, index) {
-                      final car = filteredCars[index];
+                      final vehicle = filteredVehicles[index];
                       return CarCard(
-                        imageUrl: car.img,
-                        carName: car.nome,
-                        seats: car.posti,
-                        isAutomatic: car.isAutomatico,
-                        fuelType: car.alimentazione,
-                        pricePerMonth: car.prezzoMensile.toDouble(),
-                        isFavorite: car.isFavorite,
-                        onFavoritePressed: () => _toggleFavorite(car.id),
-                        onDetailsPressed: () => _showCarDetails(car.id),
+                        imageUrl: vehicle.img,
+                        carName: vehicle.nome,
+                        seats: vehicle.posti,
+                        isAutomatic: vehicle.isAutomatico,
+                        fuelType: vehicle.alimentazione,
+                        pricePerMonth: vehicle.prezzoMensile.toDouble(),
+                        isFavorite: vehicle.isFavorite,
+                        onFavoritePressed: () => _toggleFavorite(vehicle.id),
+                        onDetailsPressed: () => _showVehicleDetails(vehicle.id),
                       );
                     },
                   ),
             ),
           ),
         ],
+      ),
+    );
+  }
+  
+  void _showFilterModal(BuildContext context, Size screenSize) {
+    final fontSize = screenSize.width * 0.04;
+    final smallFontSize = screenSize.width * 0.035;
+    final verticalSpacing = screenSize.height * 0.015;
+    final horizontalPadding = screenSize.width * 0.04;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => Container(
+          padding: EdgeInsets.all(horizontalPadding),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: verticalSpacing),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Filtri',
+                    style: TextStyle(
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF2F3F63),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              SizedBox(height: verticalSpacing),
+              
+              // Tipo di cambio
+              Text(
+                'Tipo di cambio',
+                style: TextStyle(
+                  fontSize: smallFontSize,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF2F3F63),
+                ),
+              ),
+              SizedBox(height: verticalSpacing * 0.5),
+              Row(
+                children: [
+                  Expanded(
+                    child: FilterChip(
+                      label: const Text('Automatica'),
+                      selected: _onlyAutomaticTransmission,
+                      selectedColor: const Color(0xFFF8A800),
+                      checkmarkColor: Colors.white,
+                      onSelected: (selected) {
+                        setState(() {
+                          _onlyAutomaticTransmission = selected;
+                        });
+                        this.setState(() {});
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: verticalSpacing),
+              
+              // Tipo di carburante
+              Text(
+                'Alimentazione',
+                style: TextStyle(
+                  fontSize: smallFontSize,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF2F3F63),
+                ),
+              ),
+              SizedBox(height: verticalSpacing * 0.5),
+              DropdownButtonFormField<String>(
+                value: _selectedFuelType.isEmpty ? null : _selectedFuelType,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                ),
+                items: [
+                  DropdownMenuItem<String>(
+                    value: '',
+                    child: Text('Tutti', style: TextStyle(fontSize: smallFontSize)),
+                  ),
+                  ..._availableFuelTypes.map((type) => DropdownMenuItem<String>(
+                    value: type,
+                    child: Text(type, style: TextStyle(fontSize: smallFontSize)),
+                  )).toList(),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedFuelType = value ?? '';
+                  });
+                  this.setState(() {});
+                },
+              ),
+              SizedBox(height: verticalSpacing),
+              
+              // Numero di posti
+              Text(
+                'Numero di posti',
+                style: TextStyle(
+                  fontSize: smallFontSize,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF2F3F63),
+                ),
+              ),
+              SizedBox(height: verticalSpacing * 0.5),
+              DropdownButtonFormField<int>(
+                value: _minSeats == 0 ? null : _minSeats,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                ),
+                items: [
+                  DropdownMenuItem<int>(
+                    value: 0,
+                    child: Text('Tutti', style: TextStyle(fontSize: smallFontSize)),
+                  ),
+                  DropdownMenuItem<int>(
+                    value: 2,
+                    child: Text('2+', style: TextStyle(fontSize: smallFontSize)),
+                  ),
+                  DropdownMenuItem<int>(
+                    value: 4,
+                    child: Text('4+', style: TextStyle(fontSize: smallFontSize)),
+                  ),
+                  DropdownMenuItem<int>(
+                    value: 5,
+                    child: Text('5+', style: TextStyle(fontSize: smallFontSize)),
+                  ),
+                  DropdownMenuItem<int>(
+                    value: 7,
+                    child: Text('7+', style: TextStyle(fontSize: smallFontSize)),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _minSeats = value ?? 0;
+                  });
+                  this.setState(() {});
+                },
+              ),
+              SizedBox(height: verticalSpacing),
+              
+              // Prezzo massimo
+              Text(
+                'Prezzo massimo: €${_selectedMaxPrice.toInt()}',
+                style: TextStyle(
+                  fontSize: smallFontSize,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF2F3F63),
+                ),
+              ),
+              SizedBox(height: verticalSpacing * 0.5),
+              Slider(
+                value: _selectedMaxPrice,
+                min: 0,
+                max: _maxPrice > 0 ? _maxPrice : 1000,
+                divisions: 10,
+                activeColor: const Color(0xFFF8A800),
+                inactiveColor: const Color(0xFFD9D9D9),
+                label: '€${_selectedMaxPrice.toInt()}',
+                onChanged: (value) {
+                  setState(() {
+                    _selectedMaxPrice = value;
+                  });
+                  this.setState(() {});
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('€0', style: TextStyle(fontSize: smallFontSize, color: const Color(0xFF2F3F63))),
+                  Text('€${_maxPrice.toInt()}', style: TextStyle(fontSize: smallFontSize, color: const Color(0xFF2F3F63))),
+                ],
+              ),
+              SizedBox(height: verticalSpacing * 2),
+              
+              // Pulsanti di azione
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        _resetFilters();
+                        Navigator.pop(context);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        side: const BorderSide(color: Color(0xFF2F3F63)),
+                      ),
+                      child: const Text('Reset'),
+                    ),
+                  ),
+                  SizedBox(width: horizontalPadding),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFF8A800),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: const Text('Applica'),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: verticalSpacing),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -582,8 +677,8 @@ class _HomePageState extends State<HomePage> {
     final titleFontSize = screenSize.width * 0.055;
     final verticalSpacing = screenSize.height * 0.015;
     
-    // Filtra le auto preferite dalla lista locale
-    final favoriteCars = _cars.where((car) => car.isFavorite).toList();
+    // Filtra i veicoli preferiti dalla lista locale
+    final favoriteVehicles = _vehicles.where((vehicle) => vehicle.isFavorite).toList();
     
     if (_isLoading) {
       return const Center(
@@ -603,7 +698,7 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: verticalSpacing),
             ElevatedButton(
-              onPressed: _loadCars,
+              onPressed: _loadVehicles,
               child: const Text('Riprova'),
             ),
           ],
@@ -611,10 +706,10 @@ class _HomePageState extends State<HomePage> {
       );
     }
     
-    if (favoriteCars.isEmpty) {
+    if (favoriteVehicles.isEmpty) {
       return Center(
         child: Text(
-          'Non hai auto preferite',
+          'Non hai veicoli preferiti',
           style: TextStyle(
             fontSize: fontSize,
             color: const Color(0xFF2F3F63),
@@ -642,20 +737,20 @@ class _HomePageState extends State<HomePage> {
           SizedBox(height: verticalSpacing),
           Expanded(
             child: ListView.separated(
-              itemCount: favoriteCars.length,
+              itemCount: favoriteVehicles.length,
               separatorBuilder: (context, index) => SizedBox(height: verticalSpacing),
               itemBuilder: (context, index) {
-                final car = favoriteCars[index];
+                final vehicle = favoriteVehicles[index];
                 return CarCard(
-                  imageUrl: car.img,
-                  carName: car.nome,
-                  seats: car.posti,
-                  isAutomatic: car.isAutomatico,
-                  fuelType: car.alimentazione,
-                  pricePerMonth: car.prezzoMensile.toDouble(),
-                  isFavorite: car.isFavorite,
-                  onFavoritePressed: () => _toggleFavorite(car.id),
-                  onDetailsPressed: () => _showCarDetails(car.id),
+                  imageUrl: vehicle.img,
+                  carName: vehicle.nome,
+                  seats: vehicle.posti,
+                  isAutomatic: vehicle.isAutomatico,
+                  fuelType: vehicle.alimentazione,
+                  pricePerMonth: vehicle.prezzoMensile.toDouble(),
+                  isFavorite: vehicle.isFavorite,
+                  onFavoritePressed: () => _toggleFavorite(vehicle.id),
+                  onDetailsPressed: () => _showVehicleDetails(vehicle.id),
                 );
               },
             ),
@@ -694,7 +789,7 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.08),
             child: Text(
-              'Qui potrai comunicare con i proprietari delle auto',
+              'Qui potrai comunicare con i proprietari dei veicoli',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: fontSize,

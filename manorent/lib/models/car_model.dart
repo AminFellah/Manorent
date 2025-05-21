@@ -7,6 +7,7 @@ class Car {
   final int km;
   final int cavalli;
   final int kilowat;
+  final int posti;
   final String cambio;
   final String alimentazione;
   final String descrizione;
@@ -21,6 +22,7 @@ class Car {
     required this.cilindrata,
     required this.img,
     required this.km,
+    required this.posti,
     required this.cavalli,
     required this.kilowat,
     required this.cambio,
@@ -39,6 +41,7 @@ class Car {
       modello: json['modello'] ?? '',
       cilindrata: (json['cilindrata'] ?? 0.0).toDouble(),
       img: json['img'] ?? '',
+      posti: json['posti'] ?? '',
       km: json['km'] ?? 0,
       cavalli: json['cavalli'] ?? 0,
       kilowat: json['kilowat'] ?? 0,
@@ -58,7 +61,5 @@ class Car {
   
   // Determina se l'auto ha cambio automatico
   bool get isAutomatico => cambio.toLowerCase() == 'automatico';
-  
-  // Ottiene il numero di posti (valore fisso per ora)
-  int get posti => 5;
+
 } 

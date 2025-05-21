@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import '../models/car_model.dart';
 import '../services/car_service.dart';
+import '../services/commercial_service.dart';
 
 class CarDetailPage extends StatefulWidget {
   final int carId;
-  const CarDetailPage({Key? key, required this.carId}) : super(key: key);
+  final bool isCommercial;
+  
+  const CarDetailPage({
+    Key? key, 
+    required this.carId,
+    required this.isCommercial,
+  }) : super(key: key);
 
   @override
   State<CarDetailPage> createState() => _CarDetailPageState();
@@ -17,7 +24,9 @@ class _CarDetailPageState extends State<CarDetailPage> {
   @override
   void initState() {
     super.initState();
-    _carFuture = CarService().getCarDetails(widget.carId);
+    _carFuture = widget.isCommercial
+        ? CommercialService().getCommercialVehicleDetails(widget.carId)
+        : CarService().getCarDetails(widget.carId);
   }
 
   @override

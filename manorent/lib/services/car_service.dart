@@ -6,6 +6,7 @@ class CarService {
   // URL del server Flask
   final String baseUrl = 'http://192.168.0.25:5000/auto';
 
+
   
   // Lista dei preferiti (gestita localmente)
   final Set<int> _favorites = {};
@@ -30,7 +31,6 @@ class CarService {
       throw Exception('Errore nella richiesta: $e');
     }
   }
-  
   // Ottiene i dettagli di una singola auto
   Future<Car> getCarDetails(int carId) async {
     try {
