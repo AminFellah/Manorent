@@ -729,7 +729,7 @@ body {
 /* Vantaggi Section Styles */
 .vantaggi-section {
     width: 100%;
-    padding: 60px 20px;
+    padding: 40px 20px;
     background-color: #2F3F63;
     color: white;
 }
@@ -741,7 +741,7 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 38px;
+    gap: 15px;
 }
 
 .vantaggi-title {
