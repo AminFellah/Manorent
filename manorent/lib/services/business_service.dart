@@ -1,53 +1,57 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/car_model.dart';
 
 class BusinessService {
   // URL del server Flask
-  final String baseUrl = 'http://192.168.0.25:5000/business';
+  // final String baseUrl = 'http://192.168.0.25:5000/business';
   
   // Lista dei preferiti (gestita localmente)
   final Set<int> _favorites = {};
   
-  // Ottiene tutti i veicoli commerciali dal server
+  // Ottiene tutti i veicoli aziendali da Firestore
   Future<List<Car>> getBusinessVehicles() async {
     try {
-      final response = await http.get(Uri.parse(baseUrl));
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('business').get();
       
-      if (response.statusCode == 200) {
-        final List<dynamic> vehiclesJson = jsonDecode(response.body);
-        List<Car> vehicles = vehiclesJson.map((json) => Car.fromJson(json)).toList();
-        
-        // Aggiorna lo stato dei preferiti
-        _updateFavoritesStatus(vehicles);
-        
-        return vehicles;
-      } else {
-        throw Exception('Errore nel caricamento dei veicoli aziendali: ${response.statusCode}');
-      }
+      List<Car> vehicles = querySnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        // Assumiamo che l'ID numerico sia presente nei dati del documento.
+        return Car.fromJson(data);
+      }).toList();
+
+      // Aggiorna lo stato dei preferiti
+      _updateFavoritesStatus(vehicles);
+
+      return vehicles;
     } catch (e) {
-      throw Exception('Errore nella richiesta: $e');
+      throw Exception('Errore nel caricamento dei veicoli aziendali da Firestore: $e');
     }
   }
 
-  // Ottiene i dettagli di un singolo veicolo commerciale
+  // Ottiene i dettagli di un singolo veicolo aziendale da Firestore
   Future<Car> getBusinessVehicleDetails(int vehicleId) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/$vehicleId'));
-      
-      if (response.statusCode == 200) {
-        final vehicleJson = jsonDecode(response.body);
-        Car vehicle = Car.fromJson(vehicleJson);
-        
+      // Usiamo una query per cercare l'ID numerico.
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('business')
+          .where('id', isEqualTo: vehicleId)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        Map<String, dynamic> data = querySnapshot.docs.first.data() as Map<String, dynamic>;
+        Car vehicle = Car.fromJson(data);
+
         // Aggiorna lo stato dei preferiti
         vehicle.isFavorite = _favorites.contains(vehicle.id);
-        
+
         return vehicle;
       } else {
-        throw Exception('Veicolo aziendale non trovato');
+        throw Exception('Veicolo aziendale non trovato in Firestore');
       }
     } catch (e) {
-      throw Exception('Errore nella richiesta: $e');
+      throw Exception('Errore nel caricamento dei dettagli veicolo aziendale da Firestore: $e');
     }
   }
   
@@ -67,7 +71,7 @@ class BusinessService {
     }
   }
   
-  // Ottiene solo i veicoli commerciali preferiti
+  // Ottiene solo i veicoli aziendali preferiti
   Future<List<Car>> getFavoriteBusinessVehicles() async {
     if (_favorites.isEmpty) {
       return [];
@@ -77,7 +81,7 @@ class BusinessService {
       List<Car> allVehicles = await getBusinessVehicles();
       return allVehicles.where((vehicle) => _favorites.contains(vehicle.id)).toList();
     } catch (e) {
-      throw Exception('Errore nel caricamento dei veicoli aziendali preferiti: $e');
+      throw Exception('Errore nel caricamento dei veicoli aziendali preferiti da Firestore: $e');
     }
   }
   
