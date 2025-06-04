@@ -20,6 +20,7 @@ class CarDetailPage extends StatefulWidget {
 class _CarDetailPageState extends State<CarDetailPage> {
   late Future<Car> _carFuture;
   final ScrollController _scrollController = ScrollController();
+  String _selectedPriceKey = '24_mesi'; // Stato per l'opzione di prezzo selezionata
 
   @override
   void initState() {
@@ -27,6 +28,14 @@ class _CarDetailPageState extends State<CarDetailPage> {
     _carFuture = widget.isCommercial
         ? CommercialService().getCommercialVehicleDetails(widget.carId)
         : CarService().getCarDetails(widget.carId);
+    // Inizializza la chiave del prezzo selezionato alla prima chiave disponibile se car.prezzi non è vuoto
+    _carFuture.then((car) {
+      if (car.prezzi.isNotEmpty) {
+        setState(() {
+          _selectedPriceKey = car.prezzi.keys.first;
+        });
+      }
+    }).catchError((_) {}); // Gestisci eventuali errori nel caricamento iniziale
   }
 
   @override
@@ -137,33 +146,54 @@ class _CarDetailPageState extends State<CarDetailPage> {
                       ),
                     ),
                     // Seleziona i mesi
-                      Text('Seleziona i mesi', style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xFF2F3F63))),
-                      SizedBox(height: 8),
-                      Row(
+                    Text('Seleziona i mesi', style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xFF2F3F63))),
+                    SizedBox(height: 8),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedPriceKey = '24_mesi';
+                            });
+                          },
+                          child: _buildOptionBox('24 mesi', car.prezzi['24_mesi'], isSelected: _selectedPriceKey == '24_mesi'),
+                        ),
+                        SizedBox(width: 10),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedPriceKey = '36_mesi';
+                            });
+                          },
+                          child: _buildOptionBox('36 mesi', car.prezzi['36_mesi'], isSelected: _selectedPriceKey == '36_mesi'),
+                        ),
+                        SizedBox(width: 10),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedPriceKey = '48_mesi';
+                            });
+                          },
+                          child: _buildOptionBox('48 mesi', car.prezzi['48_mesi'], isSelected: _selectedPriceKey == '48_mesi'),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: verticalSpacing),
+                    // Seleziona i KM interessati
+                    Text('Seleziona i KM interessati', style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xFF2F3F63))),
+                    SizedBox(height: 8),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
                         children: [
-                          _buildOptionBox('24 mesi', car.prezzi['24_mesi']),
+                          _buildOptionBox('10.000', car.prezzi['10k_km']),
                           SizedBox(width: 10),
-                          _buildOptionBox('36 mesi', car.prezzi['36_mesi']),
+                          _buildOptionBox('20.000', car.prezzi['20k_km']),
                           SizedBox(width: 10),
-                          _buildOptionBox('48 mesi', car.prezzi['48_mesi']),
+                          _buildOptionBox('30.000', car.prezzi['30k_km']),
                         ],
                       ),
-                      SizedBox(height: verticalSpacing),
-                      // Seleziona i KM interessati
-                      Text('Seleziona i KM interessati', style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xFF2F3F63))),
-                      SizedBox(height: 8),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            _buildOptionBox('10.000', car.prezzi['10k_km']),
-                            SizedBox(width: 10),
-                            _buildOptionBox('20.000', car.prezzi['20k_km']),
-                            SizedBox(width: 10),
-                            _buildOptionBox('30.000', car.prezzi['30k_km']),
-                          ],
-                        ),
-                      ),
+                    ),
                     SizedBox(height: verticalSpacing),
                     // Specifiche tecniche
                     Text('Specifiche tecniche', style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xFF2F3F63))),
@@ -235,7 +265,7 @@ class _CarDetailPageState extends State<CarDetailPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('€${car.prezzoMensile}/mese', style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xFF2F3F63))),
+                          Text('€${car.prezzi[_selectedPriceKey] ?? 'N/A'}/mese', style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xFF2F3F63))),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFF8A800),
@@ -272,15 +302,15 @@ class _CarDetailPageState extends State<CarDetailPage> {
     );
   }
 
-  Widget _buildOptionBox(String label, dynamic value) {
+  Widget _buildOptionBox(String label, dynamic value, {bool isSelected = false}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: const Color(0xFFD9D9D9)),
+        color: isSelected ? const Color(0xFFF8A800) : Colors.white,
+        border: Border.all(color: isSelected ? const Color(0xFFF8A800) : const Color(0xFFD9D9D9)),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Text(label, style: const TextStyle(fontSize:14,color: Color(0xFF2F3F63), fontWeight: FontWeight.w500)),
+      child: Text(label, style: TextStyle(fontSize:14,color: isSelected ? Colors.white : const Color(0xFF2F3F63), fontWeight: FontWeight.w500)),
     );
   }
 

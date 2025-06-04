@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:manorent/screens/info_form_page.dart';
 import '../components/car_card.dart';
 import '../models/car_model.dart';
 import '../services/car_service.dart';
 import '../services/commercial_service.dart';
 import '../services/firebase_service.dart';
 import '../services/business_service.dart';
-import 'login_page.dart';
+//import 'info_form_page.dart';
 import 'car_detail_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -38,7 +39,7 @@ class _HomePageState extends State<HomePage> {
   double _selectedMaxPrice = 0;
   List<String> _availableFuelTypes = [];
   int _minSeats = 0;
-  bool _showPriceFilter = false;
+ bool _showPriceFilter = false;
 
   @override
   void initState() {
@@ -175,7 +176,7 @@ class _HomePageState extends State<HomePage> {
 
       // Redirect alla pagina di login
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const LoginPage()),
+        MaterialPageRoute(builder: (context) => const InfoFormPage()),
         (route) => false,
       );
     } catch (e) {
@@ -225,8 +226,8 @@ class _HomePageState extends State<HomePage> {
             label: 'Preferiti',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chat',
+            icon: Icon(Icons.calendar_month),
+            label: 'Prenotazioni',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

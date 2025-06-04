@@ -90,11 +90,14 @@ class CarCard extends StatelessWidget {
                         left: 0,
                         right: 0,
                         bottom: 0,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.network(
-                            imageUrl,
-                            fit: BoxFit.cover,
+                        child: GestureDetector(
+                          onTap: onDetailsPressed,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              imageUrl,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
