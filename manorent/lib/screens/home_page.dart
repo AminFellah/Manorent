@@ -8,16 +8,18 @@ import '../services/firebase_service.dart';
 import '../services/business_service.dart';
 //import 'info_form_page.dart';
 import 'car_detail_page.dart';
+import '../screens/profile_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final int initialSection;
+  const HomePage({super.key, this.initialSection = 0});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
+  late int _currentIndex;
   final CarService _carService = CarService();
   final CommercialService _commercialService = CommercialService();
   final BusinessService _businessService = BusinessService();
@@ -44,6 +46,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _currentIndex = widget.initialSection;
     _loadVehicles();
   }
 
@@ -198,10 +201,22 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: const Color(0xFF2F3F63),
         foregroundColor: Colors.white,
         actions: [
-          // Pulsante di refresh
+          // Pulsante profilo
           IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadVehicles,
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProfilePage(),
+                ),
+              );
+            },
+          ),
+          // Pulsante logout
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: _handleLogout,
           ),
         ],
       ),

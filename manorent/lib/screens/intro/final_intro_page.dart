@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:manorent/screens/auth_page.dart';
 import 'package:manorent/screens/info_form_page.dart';
-import 'package:manorent/screens/intro_page_commercial.dart';
+import 'package:manorent/screens/intro/intro_page_commercial.dart';
 
 class FinalIntroPage extends StatelessWidget {
   const FinalIntroPage({super.key});
@@ -69,7 +70,7 @@ class FinalIntroPage extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => const InfoFormPage()),
+                    MaterialPageRoute(builder: (context) => const AuthPage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(

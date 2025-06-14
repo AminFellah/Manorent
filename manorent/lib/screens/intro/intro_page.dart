@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:manorent/screens/intro_page_commercial.dart';
+import 'package:manorent/screens/intro/intro_page_2.dart';
 
-class IntroPage2 extends StatelessWidget {
-  const IntroPage2({super.key});
+class IntroPage extends StatelessWidget {
+  const IntroPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +16,10 @@ class IntroPage2 extends StatelessWidget {
             child: Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 54),
-              child: Image.asset( 
-                'lib/assets/hand_key.png', // Sostituire con l'immagine corretta
+              child: Image.asset(
+                'lib/assets/bmw_loading_page.png', // Sostituire con l'immagine corretta
                 fit: BoxFit.contain,
-                alignment: Alignment.centerRight,
+                alignment: Alignment.centerLeft,
               ),
             ),
           ),
@@ -35,17 +35,17 @@ class IntroPage2 extends StatelessWidget {
                   text: const TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Un gesto semplice e inizia il tuo ',
+                        text: 'Manorent',
                         style: TextStyle(
-                          color: Colors.white, // Giallo come il colore del pulsante
+                          color: Color(0xFFF8A800), // Giallo come il colore del pulsante
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       TextSpan(
-                        text: 'viaggio senza pensieri.',
+                        text: ' – Le migliori offerte, pensate per te.',
                         style: TextStyle(
-                          color: Color(0xFFF8A800),
+                          color: Colors.white,
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
                         ),
@@ -66,7 +66,7 @@ class IntroPage2 extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => const IntroPageCommercial()),
+                    MaterialPageRoute(builder: (context) => const IntroPage2()),
                   );
                 },
                 style: ElevatedButton.styleFrom(

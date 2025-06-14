@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manorent/screens/final_intro_page.dart';
+import 'package:manorent/screens/intro/final_intro_page.dart';
 //import 'package:manorent/screens/info_form_page.dart';
 
 class IntroPageCommercial extends StatelessWidget {

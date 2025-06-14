@@ -1,21 +1,21 @@
 // main.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'screens/home_page.dart';
-import 'screens/intro_page.dart';
+import 'screens/intro/intro_page.dart';
+import 'screens/auth_page.dart';
+import 'screens/info_form_page.dart';
 import 'services/firebase_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   try {
-    // Verifica se Firebase è già inizializzato
-    if (Firebase.apps.isEmpty) {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
-    }
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   } catch (e) {
     print('Errore durante l\'inizializzazione di Firebase: $e');
   }
@@ -49,30 +49,8 @@ class ManorentApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const AuthWrapper(),
+      home: const LoadingScreen(),
     );
-  }
-}
-
-// Widget per controllare lo stato di autenticazione
-class AuthWrapper extends StatelessWidget {
-  const AuthWrapper({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final FirebaseService firebaseService = FirebaseService();
-    
-    // Utilizziamo un controllo più sicuro
-    try {
-      final currentUser = firebaseService.currentUser;
-      if (currentUser != null) {
-        return const HomePage();
-      }
-    } catch (e) {
-      print('Errore nel controllo utente: $e');
-    }
-    
-    return const LoadingScreen();
   }
 }
 
