@@ -43,7 +43,32 @@ class Booking {
     };
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'userId': userId,
+      'carId': carId,
+      'carName': carName,
+      'carImage': carImage,
+      'monthlyPrice': monthlyPrice,
+      'duration': duration,
+      'kmPerYear': kmPerYear,
+      'bookingDate': bookingDate.toIso8601String(),
+      'expiryDate': expiryDate.toIso8601String(),
+      'status': status,
+    };
+  }
+
   factory Booking.fromMap(Map<String, dynamic> map) {
+    DateTime parseDate(dynamic date) {
+      if (date is Timestamp) {
+        return date.toDate();
+      } else if (date is String) {
+        return DateTime.parse(date);
+      }
+      return DateTime.now(); // fallback
+    }
+
     return Booking(
       id: map['id'] ?? '',
       userId: map['userId'] ?? '',
@@ -53,8 +78,8 @@ class Booking {
       monthlyPrice: (map['monthlyPrice'] ?? 0.0).toDouble(),
       duration: map['duration'] ?? '',
       kmPerYear: map['kmPerYear'] ?? '',
-      bookingDate: (map['bookingDate'] as Timestamp).toDate(),
-      expiryDate: (map['expiryDate'] as Timestamp).toDate(),
+      bookingDate: parseDate(map['bookingDate']),
+      expiryDate: parseDate(map['expiryDate']),
       status: map['status'] ?? 'active',
     );
   }

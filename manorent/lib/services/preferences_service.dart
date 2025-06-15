@@ -73,7 +73,7 @@ class PreferencesService {
     if (!bookings.any((b) => b.id == booking.id)) {
       bookings.add(booking);
       await _prefs.setString(_bookingsKey, jsonEncode(
-        bookings.map((booking) => booking.toMap()).toList(),
+        bookings.map((booking) => booking.toJson()).toList(),
       ));
     }
   }
@@ -82,7 +82,7 @@ class PreferencesService {
     final bookings = getBookings();
     bookings.removeWhere((booking) => booking.id == bookingId);
     await _prefs.setString(_bookingsKey, jsonEncode(
-      bookings.map((booking) => booking.toMap()).toList(),
+      bookings.map((booking) => booking.toJson()).toList(),
     ));
   }
 

@@ -13,12 +13,10 @@ class CarService {
     final prefsService = await PreferencesService.getInstance();
     final favorites = prefsService.getFavorites();
 
-    final snapshot = await _firestore.collection('cars').get();
+    final snapshot = await _firestore.collection('auto').get();
     return snapshot.docs.map((doc) {
-      final car = Car.fromJson({
-        'id': doc.id,
-        ...doc.data(),
-      });
+      Map<String, dynamic> data = doc.data();
+      final car = Car.fromJson(data);
       // Imposta il flag dei preferiti in base ai dati locali
       car.isFavorite = favorites.any((fav) => fav.id == car.id);
       return car;
@@ -30,15 +28,18 @@ class CarService {
     final prefsService = await PreferencesService.getInstance();
     final favorites = prefsService.getFavorites();
 
-    final doc = await _firestore.collection('cars').doc(carId.toString()).get();
-    if (!doc.exists) {
+    final querySnapshot = await _firestore
+        .collection('auto')
+        .where('id', isEqualTo: carId)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isEmpty) {
       throw Exception('Auto non trovata');
     }
 
-    final car = Car.fromJson({
-      'id': doc.id,
-      ...doc.data()!,
-    });
+    Map<String, dynamic> data = querySnapshot.docs.first.data();
+    final car = Car.fromJson(data);
     // Imposta il flag dei preferiti in base ai dati locali
     car.isFavorite = favorites.any((fav) => fav.id == car.id);
     return car;
