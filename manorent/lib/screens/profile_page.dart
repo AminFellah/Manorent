@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
 import '../services/user_service.dart';
+import '../services/firebase_service.dart';
+import 'auth_page.dart';
+
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -11,14 +14,11 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final UserService _userService = UserService();
+  final FirebaseService _firebaseService = FirebaseService();
   final _formKey = GlobalKey<FormState>();
   
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _cognomeController = TextEditingController();
-  final TextEditingController _kmController = TextEditingController();
-  final TextEditingController _cittaController = TextEditingController();
-  final TextEditingController _telefonoController = TextEditingController();
-  
   UserModel? _userData;
   bool _isLoading = true;
   bool _isEditing = false;
@@ -35,9 +35,6 @@ class _ProfilePageState extends State<ProfilePage> {
   void dispose() {
     _nomeController.dispose();
     _cognomeController.dispose();
-    _kmController.dispose();
-    _cittaController.dispose();
-    _telefonoController.dispose();
     super.dispose();
   }
 
@@ -50,9 +47,6 @@ class _ProfilePageState extends State<ProfilePage> {
         if (userData != null) {
           _nomeController.text = userData.nome ?? '';
           _cognomeController.text = userData.cognome ?? '';
-          _kmController.text = userData.kmAnnuali ?? '';
-          _cittaController.text = userData.citta ?? '';
-          _telefonoController.text = userData.telefono ?? '';
           _tipoUtenteString = userData.tipoUtente;
         }
         _isLoading = false;
@@ -74,9 +68,6 @@ class _ProfilePageState extends State<ProfilePage> {
       await _userService.updateUserProfile(
         nome: _nomeController.text,
         cognome: _cognomeController.text,
-        kmAnnuali: _kmController.text,
-        citta: _cittaController.text,
-        telefono: _telefonoController.text,
         tipoUtente: _tipoUtenteString,
       );
 
@@ -92,6 +83,23 @@ class _ProfilePageState extends State<ProfilePage> {
         _errorMessage = 'Errore nel salvataggio dei dati: $e';
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _handleLogout() async {
+    try {
+      await _firebaseService.signOut();
+      if (!mounted) return;
+
+      // Redirect alla pagina di login
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const AuthPage()),
+        (route) => false,
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Errore durante il logout: $e')),
+      );
     }
   }
 
@@ -159,25 +167,8 @@ class _ProfilePageState extends State<ProfilePage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profilo'),
-        backgroundColor: const Color(0xFF2F3F63),
-        foregroundColor: Colors.white,
-        actions: [
-          if (!_isEditing)
-            IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () => setState(() => _isEditing = true),
-            )
-          else
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () => setState(() => _isEditing = false),
-            ),
-        ],
-      ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 48.0, 16.0, 16.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -224,14 +215,6 @@ class _ProfilePageState extends State<ProfilePage> {
               _buildTextField('Nome', _nomeController),
               const SizedBox(height: 16),
               _buildTextField('Cognome', _cognomeController),
-              const SizedBox(height: 16),
-              _buildTextField('KM percorsi in media all\'anno', _kmController,
-                  keyboardType: TextInputType.number),
-              const SizedBox(height: 16),
-              _buildTextField('Telefono', _telefonoController,
-                  keyboardType: TextInputType.phone),
-              const SizedBox(height: 16),
-              _buildTextField('Città', _cittaController),
               const SizedBox(height: 24),
               if (_isEditing)
                 ElevatedButton(
@@ -240,6 +223,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     backgroundColor: const Color(0xFFF8A800),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
+                    minimumSize: const Size(double.infinity, 54),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -248,6 +232,42 @@ class _ProfilePageState extends State<ProfilePage> {
                     'Salva Modifiche',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
+                )
+              else
+                Column(
+                  children: [
+                    // Pulsante Modifica Profilo
+                    ElevatedButton.icon(
+                      onPressed: () => setState(() => _isEditing = true),
+                      icon: const Icon(Icons.edit),
+                      label: const Text('Modifica Profilo'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFF8A800),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        minimumSize: const Size(double.infinity, 54),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // Pulsante di logout
+                    ElevatedButton.icon(
+                      onPressed: _handleLogout,
+                      icon: const Icon(Icons.logout),
+                      label: const Text('Esci dall\'account'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red.shade600,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        minimumSize: const Size(double.infinity, 54),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
             ],
           ),

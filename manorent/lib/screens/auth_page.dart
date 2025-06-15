@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:manorent/screens/info_form_page.dart';
+import 'package:manorent/screens/home_page.dart';
 import '../services/user_service.dart';
 
 class AuthPage extends StatefulWidget {
@@ -81,6 +82,28 @@ class _AuthPageState extends State<AuthPage> {
           email: _emailController.text,
           password: _passwordController.text,
         );
+        
+        // Controlla se l'utente ha già un tipo impostato
+        final userData = await _userService.getCurrentUserData();
+        if (!mounted) return;
+
+        if (userData?.tipoUtente != null) {
+          // Se l'utente ha già un tipo, vai direttamente alla home
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => HomePage(
+                initialSection: userData?.tipoUtente == 'Business' ? 1 : 0,
+              ),
+            ),
+          );
+        } else {
+          // Se l'utente non ha un tipo, vai alla pagina di selezione
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const InfoFormPage(),
+            ),
+          );
+        }
       } else {
         // Registrazione
         final userCredential = await _auth.createUserWithEmailAndPassword(
@@ -90,16 +113,16 @@ class _AuthPageState extends State<AuthPage> {
 
         // Crea il profilo utente iniziale
         await _userService.createNewUser(_emailController.text);
+
+        if (!mounted) return;
+
+        // Per i nuovi utenti, vai sempre alla pagina di selezione del tipo
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const InfoFormPage(),
+          ),
+        );
       }
-
-      if (!mounted) return;
-
-      // Naviga alla pagina del form informazioni
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const InfoFormPage(),
-        ),
-      );
     } on FirebaseAuthException catch (e) {
       setState(() {
         switch (e.code) {

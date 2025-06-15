@@ -9,6 +9,7 @@ import '../services/business_service.dart';
 //import 'info_form_page.dart';
 import 'car_detail_page.dart';
 import '../screens/profile_page.dart';
+import '../screens/bookings_page.dart';
 
 class HomePage extends StatefulWidget {
   final int initialSection;
@@ -200,25 +201,6 @@ class _HomePageState extends State<HomePage> {
         title: const Text('MANORENT'),
         backgroundColor: const Color(0xFF2F3F63),
         foregroundColor: Colors.white,
-        actions: [
-          // Pulsante profilo
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProfilePage(),
-                ),
-              );
-            },
-          ),
-          // Pulsante logout
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: _handleLogout,
-          ),
-        ],
       ),
       body: _buildCurrentPage(screenSize),
       bottomNavigationBar: BottomNavigationBar(
@@ -241,7 +223,7 @@ class _HomePageState extends State<HomePage> {
             label: 'Preferiti',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month),
+            icon: Icon(Icons.calendar_today),
             label: 'Prenotazioni',
           ),
           BottomNavigationBarItem(
@@ -260,9 +242,9 @@ class _HomePageState extends State<HomePage> {
       case 1:
         return _buildFavoritesTab(screenSize);
       case 2:
-        return _buildChatTab(screenSize);
+        return BookingsPage();
       case 3:
-        return _buildProfileTab(screenSize);
+        return const ProfilePage();
       default:
         return _buildExploreTab(screenSize);
     }
@@ -1040,84 +1022,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildProfileTab(Size screenSize) {
-    // Calcola valori responsivi
-    final fontSize = screenSize.width * 0.04;
-    final titleFontSize = screenSize.width * 0.055;
-    final avatarRadius = screenSize.width * 0.12;
-    final iconSize = avatarRadius * 0.8;
-    final verticalSpacing = screenSize.height * 0.02;
-    final buttonPadding = EdgeInsets.symmetric(
-        horizontal: screenSize.width * 0.06,
-        vertical: screenSize.height * 0.015);
-
-    final currentUser = _firebaseService.currentUser;
-    final email = currentUser?.email ?? 'Utente non autenticato';
-
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.05),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: avatarRadius,
-              backgroundColor: const Color(0xFF2F3F63),
-              child: Icon(
-                Icons.person,
-                size: iconSize,
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(height: verticalSpacing),
-            Text(
-              email,
-              style: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.w500,
-                color: const Color(0xFF2F3F63),
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: verticalSpacing),
-            Text(
-              'Il tuo profilo',
-              style: TextStyle(
-                fontSize: titleFontSize,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF2F3F63),
-              ),
-            ),
-            SizedBox(height: verticalSpacing * 0.4),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.1),
-              child: Text(
-                'Qui potrai gestire le tue informazioni personali',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: fontSize,
-                  color: Colors.grey,
-                ),
-              ),
-            ),
-            SizedBox(height: verticalSpacing * 1.5),
-
-            // Responsive logout button
-            ElevatedButton.icon(
-              onPressed: _handleLogout,
-              icon: const Icon(Icons.logout),
-              label: const Text('Esci dall\'account'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red.shade600,
-                foregroundColor: Colors.white,
-                padding: buttonPadding,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(screenSize.width * 0.025),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    return const ProfilePage();
   }
 }

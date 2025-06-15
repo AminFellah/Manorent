@@ -1,50 +1,50 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import '../services/preferences_service.dart';
+import '../services/user_service.dart';
 
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final UserService _userService = UserService();
 
-  // Ottieni l'utente corrente
+  // Ottiene l'utente corrente
   User? get currentUser => _auth.currentUser;
 
-  // Stream per monitorare i cambiamenti dello stato di autenticazione
-  Stream<User?> get authStateChanges => _auth.authStateChanges();
+  // Registra un nuovo utente
+  Future<UserCredential> registerWithEmailAndPassword(String email, String password) async {
+    final userCredential = await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return userCredential;
+  }
 
-  // Registrazione con email e password
-  Future<UserCredential> registerWithEmailAndPassword(
-      String email, String password) async {
-    try {
-      return await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
-    } catch (e) {
-      // Gestione degli errori generici
-      throw 'Si è verificato un errore: $e';
+  // Effettua il login
+  Future<void> signInWithEmailAndPassword(String email, String password) async {
+    final userCredential = await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    // Salva i dati dell'utente nelle SharedPreferences
+    final prefsService = await PreferencesService.getInstance();
+    final userData = await _userService.getCurrentUserData();
+    if (userData != null) {
+      await prefsService.saveUserData(userData);
     }
   }
 
-  // Login con email e password
-  Future<UserCredential> signInWithEmailAndPassword(
-      String email, String password) async {
-    try {
-      return await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
-    } catch (e) {
-      // Gestione degli errori generici
-      throw 'Si è verificato un errore: $e';
-    }
-  }
-
-  // Logout
+  // Effettua il logout
   Future<void> signOut() async {
+    // Pulisci i dati dalle SharedPreferences
+    final prefsService = await PreferencesService.getInstance();
+    await prefsService.clearUserData();
+    
+    // Effettua il logout da Firebase
     await _auth.signOut();
   }
+
+  // Verifica se l'utente è autenticato
+  Stream<User?> get authStateChanges => _auth.authStateChanges();
 
   // Gestione degli errori di autenticazione tradotti in italiano
   String _handleAuthException(FirebaseAuthException e) {

@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import '../models/car_model.dart';
 import '../services/car_service.dart';
 import '../services/commercial_service.dart';
+import '../services/booking_service.dart';
 
 class CarDetailPage extends StatefulWidget {
   final int carId;
   final bool isCommercial;
   
   const CarDetailPage({
-    Key? key, 
+    super.key, 
     required this.carId,
     required this.isCommercial,
-  }) : super(key: key);
+  });
 
   @override
   State<CarDetailPage> createState() => _CarDetailPageState();
@@ -20,7 +21,29 @@ class CarDetailPage extends StatefulWidget {
 class _CarDetailPageState extends State<CarDetailPage> {
   late Future<Car> _carFuture;
   final ScrollController _scrollController = ScrollController();
+  final BookingService _bookingService = BookingService();
   String _selectedPriceKey = '24_mesi'; // Stato per l'opzione di prezzo selezionata
+  String _selectedKm = '10000'; // Stato per i km selezionati
+  bool _isLoading = false;
+
+  double _getKmFactor(String km) {
+    switch (km) {
+      case '10000':
+        return 1.00;
+      case '20000':
+        return 1.10;
+      case '30000':
+        return 1.20;
+      default:
+        return 1.00;
+    }
+  }
+
+  double _calculatePrice(Car car) {
+    final basePrice = car.prezzi[_selectedPriceKey] ?? 0;
+    final kmFactor = _getKmFactor(_selectedKm);
+    return basePrice * kmFactor;
+  }
 
   @override
   void initState() {
@@ -42,6 +65,48 @@ class _CarDetailPageState extends State<CarDetailPage> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleBooking(Car car) async {
+    setState(() => _isLoading = true);
+
+    try {
+      await _bookingService.createBooking(
+        carId: car.id,
+        carName: car.nome,
+        carImage: car.img,
+        monthlyPrice: _calculatePrice(car),
+        duration: _selectedPriceKey,
+        kmPerYear: _selectedKm,
+      );
+
+      if (!mounted) return;
+
+      // Mostra un messaggio di successo
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Prenotazione effettuata con successo!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      // Torna alla pagina precedente
+      Navigator.pop(context);
+    } catch (e) {
+      if (!mounted) return;
+
+      // Mostra un messaggio di errore
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Errore durante la prenotazione: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   @override
@@ -186,11 +251,32 @@ class _CarDetailPageState extends State<CarDetailPage> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          _buildOptionBox('10.000', car.prezzi['10k_km']),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedKm = '10000';
+                              });
+                            },
+                            child: _buildOptionBox('10.000 km', null, isSelected: _selectedKm == '10000'),
+                          ),
                           SizedBox(width: 10),
-                          _buildOptionBox('20.000', car.prezzi['20k_km']),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedKm = '20000';
+                              });
+                            },
+                            child: _buildOptionBox('20.000 km', null, isSelected: _selectedKm == '20000'),
+                          ),
                           SizedBox(width: 10),
-                          _buildOptionBox('30.000', car.prezzi['30k_km']),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedKm = '30000';
+                              });
+                            },
+                            child: _buildOptionBox('30.000 km', null, isSelected: _selectedKm == '30000'),
+                          ),
                         ],
                       ),
                     ),
@@ -265,29 +351,31 @@ class _CarDetailPageState extends State<CarDetailPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('€${car.prezzi[_selectedPriceKey] ?? 'N/A'}/mese', style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xFF2F3F63))),
+                          Text(
+                            '€${_calculatePrice(car).toStringAsFixed(2)}/mese',
+                            style: TextStyle(
+                              fontSize: fontSize,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF2F3F63)
+                            ),
+                          ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFF8A800),
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                             ),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text('Richiesta inviata'),
-                                  content: const Text('La tua richiesta di preventivo è stata inviata!'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.of(context).pop(),
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                            child: const Text('Richiedi preventivo'),
+                            onPressed: _isLoading ? null : () => _handleBooking(car),
+                            child: _isLoading
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  ),
+                                )
+                              : const Text('Prenota ora'),
                           ),
                         ],
                       ),

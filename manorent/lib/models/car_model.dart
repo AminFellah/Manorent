@@ -53,6 +53,27 @@ class Car {
     );
   }
 
+  // Converte l'auto in JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'marca': marca,
+      'modello': modello,
+      'cilindrata': cilindrata,
+      'img': img,
+      'km': km,
+      'posti': posti,
+      'cavalli': cavalli,
+      'kilowat': kilowat,
+      'cambio': cambio,
+      'alimentazione': alimentazione,
+      'descrizione': descrizione,
+      'prezzi': prezzi,
+      'servizi_inclusi': servizi_inclusi,
+      'isFavorite': isFavorite,
+    };
+  }
+
   // Ottiene il nome completo dell'auto (marca + modello)
   String get nome => '$marca $modello';
   

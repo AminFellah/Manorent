@@ -47,22 +47,28 @@ class UserService {
   Future<void> updateUserProfile({
     String? nome,
     String? cognome,
-    String? kmAnnuali,
-    String? citta,
-    String? telefono,
     String? tipoUtente,
   }) async {
-    final currentData = await getCurrentUserData();
-    if (currentData == null) throw Exception('Dati utente non trovati');
+    if (currentUser == null) throw Exception('Nessun utente autenticato');
 
-    final updatedData = currentData.copyWith(
-      nome: nome,
-      cognome: cognome,
-      kmAnnuali: kmAnnuali,
-      citta: citta,
-      telefono: telefono,
-      tipoUtente: tipoUtente,
-    );
+    final currentData = await getCurrentUserData();
+    final now = DateTime.now();
+
+    final updatedData = currentData != null
+        ? currentData.copyWith(
+            nome: nome,
+            cognome: cognome,
+            tipoUtente: tipoUtente,
+          )
+        : UserModel(
+            uid: currentUser!.uid,
+            email: currentUser!.email!,
+            nome: nome,
+            cognome: cognome,
+            tipoUtente: tipoUtente,
+            createdAt: now,
+            updatedAt: now,
+          );
 
     await saveUserData(updatedData);
   }
