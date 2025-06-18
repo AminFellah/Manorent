@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:manorent/screens/privacy_policy_page.dart';
 import '../services/user_service.dart';
 import 'home_page.dart';
- // <--- Assicurati di creare questo file
 
 class InfoFormPage extends StatefulWidget {
   const InfoFormPage({super.key});
@@ -16,17 +15,13 @@ class _InfoFormPageState extends State<InfoFormPage> {
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _cognomeController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-<<<<<<< HEAD
   final TextEditingController _partitaIvaController = TextEditingController();
   final TextEditingController _ragioneSocialeController = TextEditingController();
   
-=======
-
->>>>>>> bac784e52097108c4e8338a8fc6cafbf641aa9cf
   String? _tipoUtenteString;
   bool _isLoading = false;
   String _errorMessage = '';
-  bool _privacyAccepted = false; // <-- Nuovo stato per checkbox
+  bool _privacyAccepted = false;
 
   @override
   void initState() {
@@ -60,26 +55,24 @@ class _InfoFormPageState extends State<InfoFormPage> {
         return;
       }
 
-<<<<<<< HEAD
       // Verifica campi aggiuntivi per Business
       if (_tipoUtenteString == 'Business' &&
           (_partitaIvaController.text.isEmpty || _ragioneSocialeController.text.isEmpty)) {
         setState(() {
           _errorMessage = 'Per utenti Business, inserire Partita IVA e Ragione Sociale.';
-=======
-      if (!_privacyAccepted) {
-        setState(() {
-          _errorMessage = 'Devi accettare la Privacy Policy per continuare.';
->>>>>>> bac784e52097108c4e8338a8fc6cafbf641aa9cf
           _isLoading = false;
         });
         return;
       }
 
-<<<<<<< HEAD
-      // Salva i dati essenziali dell'utente
-=======
->>>>>>> bac784e52097108c4e8338a8fc6cafbf641aa9cf
+      if (!_privacyAccepted) {
+        setState(() {
+          _errorMessage = 'Devi accettare la Privacy Policy per continuare.';
+          _isLoading = false;
+        });
+        return;
+      }
+
       await _userService.updateUserProfile(
         nome: _nomeController.text,
         cognome: _cognomeController.text,
@@ -259,6 +252,7 @@ class _InfoFormPageState extends State<InfoFormPage> {
                   ],
                   _buildTextField('Email', _emailController, enabled: false),
                   const SizedBox(height: 16),
+                  // Privacy Policy Checkbox
                   Row(
                     children: [
                       Checkbox(
@@ -268,36 +262,30 @@ class _InfoFormPageState extends State<InfoFormPage> {
                             _privacyAccepted = value ?? false;
                           });
                         },
+                        activeColor: const Color(0xFF2F3F63),
                       ),
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(
+                            Navigator.push(
+                              context,
                               MaterialPageRoute(
-                                builder: (_) => const PrivacyPolicyPage(),
+                                builder: (context) => const PrivacyPolicyPage(),
                               ),
                             );
                           },
-                          child: const Text.rich(
-                            TextSpan(
-                              children: [
-                                TextSpan(text: 'Ho letto e accetto la '),
-                                TextSpan(
-                                  text: 'Privacy Policy',
-                                  style: TextStyle(
-                                    color: Color(0xFF2F3F63),
-                                    decoration: TextDecoration.underline,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
+                          child: const Text(
+                            'Ho letto e accetto la Privacy Policy',
+                            style: TextStyle(
+                              color: Color(0xFF2F3F63),
+                              decoration: TextDecoration.underline,
                             ),
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 32),
                   SizedBox(
                     height: 54,
                     child: ElevatedButton(

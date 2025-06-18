@@ -325,44 +325,4 @@ class _AuthPageState extends State<AuthPage> {
       ),
     );
   }
-<<<<<<< HEAD
-=======
-}
-
-class _SocialButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
-
-  const _SocialButton({
-    required this.icon,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 54,
-        height: 54,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 4,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Icon(
-          icon,
-          size: 32,
-          color: const Color(0xFF2F3F63),
-        ),
-      ),
-    );
-  }
->>>>>>> bac784e52097108c4e8338a8fc6cafbf641aa9cf
 } 
