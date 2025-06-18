@@ -84,6 +84,16 @@ class BookingsPage extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 8),
+                          // Aggiungo l'ID della prenotazione
+                          Text(
+                            'ID Prenotazione: ${booking.id}',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF2F3F63),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
                           // Dettagli della prenotazione
                           _buildDetailRow('Prezzo mensile', '€${booking.monthlyPrice.toStringAsFixed(2)}'),
                           _buildDetailRow('Durata', '${booking.duration.split('_')[0]} mesi'),

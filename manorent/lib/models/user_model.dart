@@ -7,6 +7,8 @@ class UserModel {
   final String? citta;
   final String? telefono;
   final String? tipoUtente;
+  final String? partitaIva;
+  final String? ragioneSociale;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -19,6 +21,8 @@ class UserModel {
     this.citta,
     this.telefono,
     this.tipoUtente,
+    this.partitaIva,
+    this.ragioneSociale,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -34,6 +38,8 @@ class UserModel {
       'citta': citta,
       'telefono': telefono,
       'tipoUtente': tipoUtente,
+      'partitaIva': partitaIva,
+      'ragioneSociale': ragioneSociale,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
@@ -50,6 +56,8 @@ class UserModel {
       citta: map['citta'],
       telefono: map['telefono'],
       tipoUtente: map['tipoUtente'],
+      partitaIva: map['partitaIva'],
+      ragioneSociale: map['ragioneSociale'],
       createdAt: DateTime.parse(map['createdAt'] as String),
       updatedAt: DateTime.parse(map['updatedAt'] as String),
     );
@@ -63,6 +71,8 @@ class UserModel {
     String? citta,
     String? telefono,
     String? tipoUtente,
+    String? partitaIva,
+    String? ragioneSociale,
   }) {
     return UserModel(
       uid: this.uid,
@@ -73,6 +83,8 @@ class UserModel {
       citta: citta ?? this.citta,
       telefono: telefono ?? this.telefono,
       tipoUtente: tipoUtente ?? this.tipoUtente,
+      partitaIva: partitaIva ?? this.partitaIva,
+      ragioneSociale: ragioneSociale ?? this.ragioneSociale,
       createdAt: this.createdAt,
       updatedAt: DateTime.now(),
     );

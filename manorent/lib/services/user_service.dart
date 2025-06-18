@@ -48,27 +48,25 @@ class UserService {
     String? nome,
     String? cognome,
     String? tipoUtente,
+    String? partitaIva,
+    String? ragioneSociale,
   }) async {
     if (currentUser == null) throw Exception('Nessun utente autenticato');
 
     final currentData = await getCurrentUserData();
     final now = DateTime.now();
 
-    final updatedData = currentData != null
-        ? currentData.copyWith(
-            nome: nome,
-            cognome: cognome,
-            tipoUtente: tipoUtente,
-          )
-        : UserModel(
-            uid: currentUser!.uid,
-            email: currentUser!.email!,
-            nome: nome,
-            cognome: cognome,
-            tipoUtente: tipoUtente,
-            createdAt: now,
-            updatedAt: now,
-          );
+    final updatedData = UserModel(
+      uid: currentUser!.uid,
+      email: currentUser!.email!,
+      nome: nome ?? currentData?.nome,
+      cognome: cognome ?? currentData?.cognome,
+      tipoUtente: tipoUtente ?? currentData?.tipoUtente,
+      partitaIva: partitaIva ?? currentData?.partitaIva,
+      ragioneSociale: ragioneSociale ?? currentData?.ragioneSociale,
+      createdAt: currentData?.createdAt ?? now,
+      updatedAt: now,
+    );
 
     await saveUserData(updatedData);
   }

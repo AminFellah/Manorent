@@ -19,6 +19,8 @@ class _ProfilePageState extends State<ProfilePage> {
   
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _cognomeController = TextEditingController();
+  final TextEditingController _partitaIvaController = TextEditingController();
+  final TextEditingController _ragioneSocialeController = TextEditingController();
   UserModel? _userData;
   bool _isLoading = true;
   bool _isEditing = false;
@@ -35,6 +37,8 @@ class _ProfilePageState extends State<ProfilePage> {
   void dispose() {
     _nomeController.dispose();
     _cognomeController.dispose();
+    _partitaIvaController.dispose();
+    _ragioneSocialeController.dispose();
     super.dispose();
   }
 
@@ -47,6 +51,8 @@ class _ProfilePageState extends State<ProfilePage> {
         if (userData != null) {
           _nomeController.text = userData.nome ?? '';
           _cognomeController.text = userData.cognome ?? '';
+          _partitaIvaController.text = userData.partitaIva ?? '';
+          _ragioneSocialeController.text = userData.ragioneSociale ?? '';
           _tipoUtenteString = userData.tipoUtente;
         }
         _isLoading = false;
@@ -69,6 +75,8 @@ class _ProfilePageState extends State<ProfilePage> {
         nome: _nomeController.text,
         cognome: _cognomeController.text,
         tipoUtente: _tipoUtenteString,
+        partitaIva: _tipoUtenteString == 'Business' ? _partitaIvaController.text : null,
+        ragioneSociale: _tipoUtenteString == 'Business' ? _ragioneSocialeController.text : null,
       );
 
       await _loadUserData();
@@ -215,6 +223,12 @@ class _ProfilePageState extends State<ProfilePage> {
               _buildTextField('Nome', _nomeController),
               const SizedBox(height: 16),
               _buildTextField('Cognome', _cognomeController),
+              if (_tipoUtenteString == 'Business') ...[
+                const SizedBox(height: 16),
+                _buildTextField('Partita IVA', _partitaIvaController),
+                const SizedBox(height: 16),
+                _buildTextField('Ragione Sociale', _ragioneSocialeController),
+              ],
               const SizedBox(height: 24),
               if (_isEditing)
                 ElevatedButton(

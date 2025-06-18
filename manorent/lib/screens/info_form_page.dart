@@ -14,6 +14,8 @@ class _InfoFormPageState extends State<InfoFormPage> {
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _cognomeController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _partitaIvaController = TextEditingController();
+  final TextEditingController _ragioneSocialeController = TextEditingController();
   
   String? _tipoUtenteString;
   bool _isLoading = false;
@@ -51,11 +53,23 @@ class _InfoFormPageState extends State<InfoFormPage> {
         return;
       }
 
+      // Verifica campi aggiuntivi per Business
+      if (_tipoUtenteString == 'Business' &&
+          (_partitaIvaController.text.isEmpty || _ragioneSocialeController.text.isEmpty)) {
+        setState(() {
+          _errorMessage = 'Per utenti Business, inserire Partita IVA e Ragione Sociale.';
+          _isLoading = false;
+        });
+        return;
+      }
+
       // Salva i dati essenziali dell'utente
       await _userService.updateUserProfile(
         nome: _nomeController.text,
         cognome: _cognomeController.text,
         tipoUtente: _tipoUtenteString,
+        partitaIva: _tipoUtenteString == 'Business' ? _partitaIvaController.text : null,
+        ragioneSociale: _tipoUtenteString == 'Business' ? _ragioneSocialeController.text : null,
       );
 
       if (!mounted) return;
@@ -167,6 +181,8 @@ class _InfoFormPageState extends State<InfoFormPage> {
     _nomeController.dispose();
     _cognomeController.dispose();
     _emailController.dispose();
+    _partitaIvaController.dispose();
+    _ragioneSocialeController.dispose();
     super.dispose();
   }
 
@@ -219,6 +235,10 @@ class _InfoFormPageState extends State<InfoFormPage> {
                   const SizedBox(height: 32),
                   _buildTextField('Nome', _nomeController),
                   _buildTextField('Cognome', _cognomeController),
+                  if (_tipoUtenteString == 'Business') ...[
+                    _buildTextField('Partita IVA', _partitaIvaController),
+                    _buildTextField('Ragione Sociale', _ragioneSocialeController),
+                  ],
                   _buildTextField('Email', _emailController, enabled: false),
                   const SizedBox(height: 32),
                   SizedBox(
