@@ -115,6 +115,7 @@ class _CarDetailPageState extends State<CarDetailPage> {
     final horizontalPadding = screenSize.width * 0.04;
     final verticalPadding = screenSize.height * 0.02;
     final fontSize = screenSize.width * 0.04;
+    final priceSize = screenSize.width * 0.06;
     final titleFontSize = screenSize.width * 0.055;
     final smallFontSize = screenSize.width * 0.035;
     final verticalSpacing = screenSize.height * 0.015;
@@ -354,7 +355,7 @@ class _CarDetailPageState extends State<CarDetailPage> {
                           Text(
                             '€${_calculatePrice(car).toStringAsFixed(2)}/mese',
                             style: TextStyle(
-                              fontSize: fontSize,
+                              fontSize: priceSize,
                               fontWeight: FontWeight.bold,
                               color: const Color(0xFF2F3F63)
                             ),

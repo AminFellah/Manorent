@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:manorent/screens/privacy_policy_page.dart';
 import '../services/user_service.dart';
 import 'home_page.dart';
+ // <--- Assicurati di creare questo file
 
 class InfoFormPage extends StatefulWidget {
   const InfoFormPage({super.key});
@@ -14,12 +16,17 @@ class _InfoFormPageState extends State<InfoFormPage> {
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _cognomeController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+<<<<<<< HEAD
   final TextEditingController _partitaIvaController = TextEditingController();
   final TextEditingController _ragioneSocialeController = TextEditingController();
   
+=======
+
+>>>>>>> bac784e52097108c4e8338a8fc6cafbf641aa9cf
   String? _tipoUtenteString;
   bool _isLoading = false;
   String _errorMessage = '';
+  bool _privacyAccepted = false; // <-- Nuovo stato per checkbox
 
   @override
   void initState() {
@@ -53,17 +60,26 @@ class _InfoFormPageState extends State<InfoFormPage> {
         return;
       }
 
+<<<<<<< HEAD
       // Verifica campi aggiuntivi per Business
       if (_tipoUtenteString == 'Business' &&
           (_partitaIvaController.text.isEmpty || _ragioneSocialeController.text.isEmpty)) {
         setState(() {
           _errorMessage = 'Per utenti Business, inserire Partita IVA e Ragione Sociale.';
+=======
+      if (!_privacyAccepted) {
+        setState(() {
+          _errorMessage = 'Devi accettare la Privacy Policy per continuare.';
+>>>>>>> bac784e52097108c4e8338a8fc6cafbf641aa9cf
           _isLoading = false;
         });
         return;
       }
 
+<<<<<<< HEAD
       // Salva i dati essenziali dell'utente
+=======
+>>>>>>> bac784e52097108c4e8338a8fc6cafbf641aa9cf
       await _userService.updateUserProfile(
         nome: _nomeController.text,
         cognome: _cognomeController.text,
@@ -74,7 +90,6 @@ class _InfoFormPageState extends State<InfoFormPage> {
 
       if (!mounted) return;
 
-      // Naviga alla HomePage con la sezione appropriata
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => HomePage(
@@ -90,7 +105,8 @@ class _InfoFormPageState extends State<InfoFormPage> {
     }
   }
 
-  Widget _buildTextField(String hint, TextEditingController controller, {bool? enabled}) {
+  Widget _buildTextField(String hint, TextEditingController controller,
+      {bool? enabled}) {
     return Container(
       height: 54,
       margin: const EdgeInsets.only(bottom: 18),
@@ -159,7 +175,9 @@ class _InfoFormPageState extends State<InfoFormPage> {
           color: isSelected ? const Color(0xFF2F3F63) : Colors.white,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isSelected ? const Color(0xFF2F3F63) : const Color(0xFFD9D9D9),
+            color: isSelected
+                ? const Color(0xFF2F3F63)
+                : const Color(0xFFD9D9D9),
           ),
         ),
         child: Center(
@@ -240,7 +258,46 @@ class _InfoFormPageState extends State<InfoFormPage> {
                     _buildTextField('Ragione Sociale', _ragioneSocialeController),
                   ],
                   _buildTextField('Email', _emailController, enabled: false),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _privacyAccepted,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _privacyAccepted = value ?? false;
+                          });
+                        },
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const PrivacyPolicyPage(),
+                              ),
+                            );
+                          },
+                          child: const Text.rich(
+                            TextSpan(
+                              children: [
+                                TextSpan(text: 'Ho letto e accetto la '),
+                                TextSpan(
+                                  text: 'Privacy Policy',
+                                  style: TextStyle(
+                                    color: Color(0xFF2F3F63),
+                                    decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
                   SizedBox(
                     height: 54,
                     child: ElevatedButton(
